@@ -1952,7 +1952,7 @@ def move_when_done(processed, summary_equiv, summary_unequiv):
     shutil.move(summary_unequiv, './summaries/'+summary_unequiv)
     return True
 
-listing = glob.glob('./preprocessed/*')
+listing = glob.glob('./preprocessed/*.xlsx')
 for filename in listing:
     filename = os.path.basename(filename)
     if os.path.isfile('./preprocessed/' + filename):
