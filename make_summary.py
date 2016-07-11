@@ -362,13 +362,12 @@ def process_Network_Daypart_tab(filename, equiv):
     global summary_wb
 
     source_network_day_sheet = source_wb.get_sheet_by_name('Network Daypart')
-    dest_network_day_sheet = summary_wb.create_sheet("Network Daypart", 2)
+    dest_network_day_sheet = summary_wb.get_sheet_by_name("Network Daypart")
 
     dest_network_day_sheet['A1'].font = Font(bold=True)
-    dest_network_day_sheet[
-        'A1'] = 'EQUIVALIZED - Network Daypart Summary' if equiv else 'UNEQUIVALIZED - Network Daypart Summary'
+    dest_network_day_sheet['A1'] = 'EQUIVALIZED - Network Daypart Summary' if equiv else 'UNEQUIVALIZED - Network Daypart Summary'
 
-    write_row = 3
+    write_row = 2
 
     for row_num in range(1, source_network_day_sheet.max_row + 1):
         write_col = 1
@@ -1025,30 +1024,31 @@ def process_powerpoint_tab(filename, equiv):
     dest_pp_sheet = summary_wb.get_sheet_by_name('Powerpoint Data')
     source_rows = source_sheet.max_row
 
+    dest_pp_sheet['A2'] = 'EQUIVALIZED - Total Campaign Target Metrics' if equiv else 'UNEQUIVALIZED - Total Campaign Target Metrics'
+
     for row_num in range(1, source_rows):
         if source_sheet.cell(row=row_num, column=1).value == 'Total':
-            dest_pp_sheet.cell(row=4, column=3).value = source_sheet.cell(row=row_num, column=4).value
-            if equiv:
-                dest_pp_sheet.cell(row=5, column=3).value = source_sheet.cell(row=row_num, column=3).value
-            else:
-                dest_pp_sheet.cell(row=5, column=3).value = (source_sheet.cell(row=row_num,
-                                                                               column=6).value * source_sheet.cell(
-                    row=row_num, column=3).value) / source_sheet.cell(row=row_num, column=5).value
-            if equiv:
-                dest_pp_sheet.cell(row=8, column=3).value = source_sheet.cell(row=row_num, column=17).value
-            else:
-                dest_pp_sheet.cell(row=8, column=3).value = source_sheet.cell(row=row_num, column=18).value
-            dest_pp_sheet.cell(row=9, column=3).value = source_sheet.cell(row=row_num, column=32).value
-            dest_pp_sheet.cell(row=10, column=3).value = source_sheet.cell(row=row_num, column=20).value
-            if equiv:
-                dest_pp_sheet.cell(row=11, column=3).value = source_sheet.cell(row=row_num, column=27).value
-            else:
-                dest_pp_sheet.cell(row=11, column=3).value = source_sheet.cell(row=row_num, column=28).value
-            dest_pp_sheet.cell(row=12, column=3).value = source_sheet.cell(row=7, column=2).value
-            dest_pp_sheet.cell(row=13, column=3).value = source_sheet.cell(row=15, column=2).value
-            dest_pp_sheet.cell(row=14, column=3).value = source_sheet.cell(row=row_num, column=19).value
-            dest_pp_sheet.cell(row=43, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            dest_pp_sheet.cell(row=68, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=4, column=3).value = source_sheet.cell(row=row_num, column=3).value
+            format_cell(dest_pp_sheet.cell(row=4, column=3), 'dollars')
+            dest_pp_sheet.cell(row=5, column=3).value = source_sheet.cell(row=row_num, column=2).value
+            dest_pp_sheet.cell(row=8, column=3).value = source_sheet.cell(row=row_num, column=14).value
+            format_cell(dest_pp_sheet.cell(row=8, column=3), '')
+            dest_pp_sheet.cell(row=9, column=3).value = source_sheet.cell(row=row_num, column=26).value
+            format_cell(dest_pp_sheet.cell(row=9, column=3), '')
+            dest_pp_sheet.cell(row=10, column=3).value = source_sheet.cell(row=row_num, column=16).value
+            format_cell(dest_pp_sheet.cell(row=10, column=3), 'pct')
+            dest_pp_sheet.cell(row=11, column=3).value = source_sheet.cell(row=row_num, column=23).value
+            format_cell(dest_pp_sheet.cell(row=11, column=3), '')
+            dest_pp_sheet.cell(row=12, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            format_cell(dest_pp_sheet.cell(row=12, column=3), '')
+            dest_pp_sheet.cell(row=13, column=3).value = source_sheet.cell(row=row_num, column=22).value
+            format_cell(dest_pp_sheet.cell(row=13, column=3), 'pct')
+            dest_pp_sheet.cell(row=14, column=3).value = source_sheet.cell(row=row_num, column=15).value
+            format_cell(dest_pp_sheet.cell(row=14, column=3), '')
+            dest_pp_sheet.cell(row=45, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            format_cell(dest_pp_sheet.cell(row=45, column=3), '')
+            dest_pp_sheet.cell(row=72, column=3).value = source_sheet.cell(row=row_num, column=16).value
+            format_cell(dest_pp_sheet.cell(row=72, column=3), 'pct')
             break
 
     start_row = 0
@@ -1062,156 +1062,96 @@ def process_powerpoint_tab(filename, equiv):
 
     for row_num in range(start_row, end_row):
         if source_sheet.cell(row=row_num, column=1).value == 'NBC':
-            if equiv:
-                dest_pp_sheet.cell(row=25, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=51, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=25, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=51, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=76, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=25, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=53, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=80, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'Bravo':
-            if equiv:
-                dest_pp_sheet.cell(row=18, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=44, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=18, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=44, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=69, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=18, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=46, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=73, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'CNBC':
-            if equiv:
-                dest_pp_sheet.cell(row=19, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=45, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=19, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=45, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=70, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=19, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=47, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=74, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'Chiller':
-            if equiv:
-                dest_pp_sheet.cell(row=20, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=46, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=20, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=46, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=71, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=20, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=48, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=75, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'E!':
-            if equiv:
-                dest_pp_sheet.cell(row=21, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=47, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=21, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=47, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=72, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=21, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=49, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=76, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'Esquire':
-            if equiv:
-                dest_pp_sheet.cell(row=22, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=48, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=22, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=48, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=73, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=22, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=50, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=77, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'Golf Channel':
-            if equiv:
-                dest_pp_sheet.cell(row=23, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=49, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=23, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=49, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=74, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=23, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=51, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=78, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'MSNBC':
-            if equiv:
-                dest_pp_sheet.cell(row=24, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=50, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=24, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=50, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=75, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=24, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=52, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=79, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'NBCSN':
-            if equiv:
-                dest_pp_sheet.cell(row=26, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=52, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=26, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=52, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=77, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=26, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=54, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=81, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'Oxygen':
-            if equiv:
-                dest_pp_sheet.cell(row=27, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=53, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=27, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=53, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=78, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=27, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=55, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=82, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'Syfy':
-            if equiv:
-                dest_pp_sheet.cell(row=28, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=54, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=28, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=54, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=79, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=28, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=56, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=83, column=3).value = source_sheet.cell(row=row_num, column=16).value
         if source_sheet.cell(row=row_num, column=1).value == 'USA':
-            if equiv:
-                dest_pp_sheet.cell(row=29, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=17).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=55, column=3).value = source_sheet.cell(row=row_num, column=29).value
-            else:
-                dest_pp_sheet.cell(row=29, column=3).value = source_sheet.cell(row=row_num,
-                                                                               column=18).value / dest_pp_sheet.cell(
-                    row=8, column=3).value
-                dest_pp_sheet.cell(row=55, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            dest_pp_sheet.cell(row=80, column=3).value = source_sheet.cell(row=row_num, column=20).value
+            dest_pp_sheet.cell(row=29, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=57, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=84, column=3).value = source_sheet.cell(row=row_num, column=16).value
+        if source_sheet.cell(row=row_num, column=1).value == 'Sprout':
+            dest_pp_sheet.cell(row=30, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=58, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=85, column=3).value = source_sheet.cell(row=row_num, column=16).value
+        if source_sheet.cell(row=row_num, column=1).value == 'Telemundo':
+            dest_pp_sheet.cell(row=31, column=3).value = source_sheet.cell(row=row_num,
+                                                                           column=14).value / dest_pp_sheet.cell(
+                row=8, column=3).value
+            dest_pp_sheet.cell(row=59, column=3).value = source_sheet.cell(row=row_num, column=24).value
+            dest_pp_sheet.cell(row=86, column=3).value = source_sheet.cell(row=row_num, column=16).value
 
     source_sheet = summary_wb.get_sheet_by_name('Program Metrics')
     source_rows = source_sheet.max_row
 
     programs_obj = {}
     networks_obj = {}
-    for row_num in range(2, source_rows + 1):
+    for row_num in range(4, source_rows + 1):
         networks_obj[source_sheet.cell(row=row_num, column=1).value] = 1
         programs_obj[source_sheet.cell(row=row_num, column=18).value] = 1
 
@@ -1228,80 +1168,50 @@ def process_powerpoint_tab(filename, equiv):
     nbc_prime = 0
     nbc_late = 0
     nbc_overnight = 0
-    for row_num in range(2, source_rows + 1):
+    for row_num in range(4, source_rows + 1):
         if source_sheet.cell(row=row_num, column=1).value == 'NBC' and source_sheet.cell(row=row_num,
                                                                                          column=2).value == 'Morning':
-            if equiv:
-                nbc_morning = source_sheet.cell(row=row_num, column=18).value
-                nbc_sum += source_sheet.cell(row=row_num, column=18).value
-                dest_pp_sheet.cell(row=59, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            else:
-                nbc_morning = source_sheet.cell(row=row_num, column=19).value
-                nbc_sum += source_sheet.cell(row=row_num, column=19).value
-                dest_pp_sheet.cell(row=59, column=3).value = source_sheet.cell(row=row_num, column=31).value
-            dest_pp_sheet.cell(row=84, column=3).value = source_sheet.cell(row=row_num, column=21).value
+            nbc_morning = source_sheet.cell(row=row_num, column=15).value
+            nbc_sum += source_sheet.cell(row=row_num, column=15).value
+            dest_pp_sheet.cell(row=63, column=3).value = source_sheet.cell(row=row_num, column=25).value
+            dest_pp_sheet.cell(row=90, column=3).value = source_sheet.cell(row=row_num, column=17).value
         if source_sheet.cell(row=row_num, column=1).value == 'NBC' and source_sheet.cell(row=row_num,
                                                                                          column=2).value == 'Daytime':
-            if equiv:
-                nbc_daytime = source_sheet.cell(row=row_num, column=18).value
-                nbc_sum += source_sheet.cell(row=row_num, column=18).value
-                dest_pp_sheet.cell(row=60, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            else:
-                nbc_daytime = source_sheet.cell(row=row_num, column=19).value
-                nbc_sum += source_sheet.cell(row=row_num, column=19).value
-                dest_pp_sheet.cell(row=60, column=3).value = source_sheet.cell(row=row_num, column=31).value
-            dest_pp_sheet.cell(row=85, column=3).value = source_sheet.cell(row=row_num, column=21).value
+            nbc_daytime = source_sheet.cell(row=row_num, column=15).value
+            nbc_sum += source_sheet.cell(row=row_num, column=15).value
+            dest_pp_sheet.cell(row=64, column=3).value = source_sheet.cell(row=row_num, column=25).value
+            dest_pp_sheet.cell(row=91, column=3).value = source_sheet.cell(row=row_num, column=17).value
         if source_sheet.cell(row=row_num, column=1).value == 'NBC' and source_sheet.cell(row=row_num,
                                                                                          column=2).value == 'Early Fringe':
-            if equiv:
-                nbc_early = source_sheet.cell(row=row_num, column=18).value
-                nbc_sum += source_sheet.cell(row=row_num, column=18).value
-                dest_pp_sheet.cell(row=61, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            else:
-                nbc_early = source_sheet.cell(row=row_num, column=19).value
-                nbc_sum += source_sheet.cell(row=row_num, column=19).value
-                dest_pp_sheet.cell(row=61, column=3).value = source_sheet.cell(row=row_num, column=31).value
-            dest_pp_sheet.cell(row=86, column=3).value = source_sheet.cell(row=row_num, column=21).value
+            nbc_early = source_sheet.cell(row=row_num, column=15).value
+            nbc_sum += source_sheet.cell(row=row_num, column=15).value
+            dest_pp_sheet.cell(row=65, column=3).value = source_sheet.cell(row=row_num, column=25).value
+            dest_pp_sheet.cell(row=92, column=3).value = source_sheet.cell(row=row_num, column=17).value
         if source_sheet.cell(row=row_num, column=1).value == 'NBC' and source_sheet.cell(row=row_num,
                                                                                          column=2).value == 'Prime':
-            if equiv:
-                nbc_prime = source_sheet.cell(row=row_num, column=18).value
-                nbc_sum += source_sheet.cell(row=row_num, column=18).value
-                dest_pp_sheet.cell(row=62, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            else:
-                nbc_prime = source_sheet.cell(row=row_num, column=19).value
-                nbc_sum += source_sheet.cell(row=row_num, column=19).value
-                dest_pp_sheet.cell(row=62, column=3).value = source_sheet.cell(row=row_num, column=31).value
-            dest_pp_sheet.cell(row=87, column=3).value = source_sheet.cell(row=row_num, column=21).value
+            nbc_prime = source_sheet.cell(row=row_num, column=15).value
+            nbc_sum += source_sheet.cell(row=row_num, column=15).value
+            dest_pp_sheet.cell(row=66, column=3).value = source_sheet.cell(row=row_num, column=25).value
+            dest_pp_sheet.cell(row=93, column=3).value = source_sheet.cell(row=row_num, column=17).value
         if source_sheet.cell(row=row_num, column=1).value == 'NBC' and source_sheet.cell(row=row_num,
                                                                                          column=2).value == 'Late Night':
-            if equiv:
-                nbc_late = source_sheet.cell(row=row_num, column=18).value
-                nbc_sum += source_sheet.cell(row=row_num, column=18).value
-                dest_pp_sheet.cell(row=63, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            else:
-                nbc_late = source_sheet.cell(row=row_num, column=19).value
-                nbc_sum += source_sheet.cell(row=row_num, column=19).value
-                dest_pp_sheet.cell(row=63, column=3).value = source_sheet.cell(row=row_num, column=31).value
-            dest_pp_sheet.cell(row=88, column=3).value = source_sheet.cell(row=row_num, column=21).value
+            nbc_late = source_sheet.cell(row=row_num, column=15).value
+            nbc_sum += source_sheet.cell(row=row_num, column=15).value
+            dest_pp_sheet.cell(row=67, column=3).value = source_sheet.cell(row=row_num, column=25).value
+            dest_pp_sheet.cell(row=94, column=3).value = source_sheet.cell(row=row_num, column=17).value
         if source_sheet.cell(row=row_num, column=1).value == 'NBC' and source_sheet.cell(row=row_num,
                                                                                          column=2).value == 'Overnight':
-            if equiv:
-                nbc_overnight = source_sheet.cell(row=row_num, column=18).value
-                nbc_sum += source_sheet.cell(row=row_num, column=18).value
-                dest_pp_sheet.cell(row=64, column=3).value = source_sheet.cell(row=row_num, column=30).value
-            else:
-                nbc_overnight = source_sheet.cell(row=row_num, column=19).value
-                nbc_sum += source_sheet.cell(row=row_num, column=19).value
-                dest_pp_sheet.cell(row=64, column=3).value = source_sheet.cell(row=row_num, column=31).value
-            dest_pp_sheet.cell(row=89, column=3).value = source_sheet.cell(row=row_num, column=21).value
+            nbc_overnight = source_sheet.cell(row=row_num, column=15).value
+            nbc_sum += source_sheet.cell(row=row_num, column=15).value
+            dest_pp_sheet.cell(row=68, column=3).value = source_sheet.cell(row=row_num, column=25).value
+            dest_pp_sheet.cell(row=95, column=3).value = source_sheet.cell(row=row_num, column=17).value
 
-    dest_pp_sheet.cell(row=34, column=3).value = nbc_morning / nbc_sum if nbc_sum > 0 else 0
-    dest_pp_sheet.cell(row=35, column=3).value = nbc_daytime / nbc_sum if nbc_sum > 0 else 0
-    dest_pp_sheet.cell(row=36, column=3).value = nbc_early / nbc_sum if nbc_sum > 0 else 0
-    dest_pp_sheet.cell(row=37, column=3).value = nbc_prime / nbc_sum if nbc_sum > 0 else 0
-    dest_pp_sheet.cell(row=38, column=3).value = nbc_late / nbc_sum if nbc_sum > 0 else 0
-    dest_pp_sheet.cell(row=39, column=3).value = nbc_overnight / nbc_sum if nbc_sum > 0 else 0
+    dest_pp_sheet.cell(row=36, column=3).value = nbc_morning / nbc_sum if nbc_sum > 0 else 0
+    dest_pp_sheet.cell(row=37, column=3).value = nbc_daytime / nbc_sum if nbc_sum > 0 else 0
+    dest_pp_sheet.cell(row=38, column=3).value = nbc_early / nbc_sum if nbc_sum > 0 else 0
+    dest_pp_sheet.cell(row=39, column=3).value = nbc_prime / nbc_sum if nbc_sum > 0 else 0
+    dest_pp_sheet.cell(row=40, column=3).value = nbc_late / nbc_sum if nbc_sum > 0 else 0
+    dest_pp_sheet.cell(row=41, column=3).value = nbc_overnight / nbc_sum if nbc_sum > 0 else 0
 
     summary_wb._active_sheet_index = 6
 
@@ -2232,24 +2142,24 @@ for filename in listing:
         new_filename_unequiv = setup(filename, False)
         if not new_filename_unequiv:
             print "error setting up " + filename
-        # print process_summary_tab(new_filename_unequiv, False)
-        # print process_Network_Daypart_tab(new_filename_unequiv, False)
-        # print process_frequency_distribution_tab(new_filename_unequiv, False)
-        # print process_reach_by_week_tab(new_filename_unequiv, False)
-        # print process_frequency_distribution_by_net_tab(new_filename_unequiv, False)
+        print process_summary_tab(new_filename_unequiv, False)
+        print process_Network_Daypart_tab(new_filename_unequiv, False)
+        print process_frequency_distribution_tab(new_filename_unequiv, False)
+        print process_reach_by_week_tab(new_filename_unequiv, False)
+        print process_frequency_distribution_by_net_tab(new_filename_unequiv, False)
         print process_network_reach_tab(new_filename_unequiv, False)
-        # print process_powerpoint_tab(new_filename_unequiv, False)
+        print process_powerpoint_tab(new_filename_unequiv, False)
         # print process_appendix_tab(new_filename_unequiv, False)
         print "processing equiv"
         new_filename_equiv = setup(filename, True)
-        # if not new_filename_equiv:
-        #     print "error setting up " + filename
-        # print process_summary_tab(new_filename_equiv, True)
-        # print process_Network_Daypart_tab(new_filename_equiv, True)
-        # print process_frequency_distribution_tab(new_filename_equiv, True)
-        # print process_reach_by_week_tab(new_filename_equiv, True)
-        # print process_frequency_distribution_by_net_tab(new_filename_equiv, True)
+        if not new_filename_equiv:
+            print "error setting up " + filename
+        print process_summary_tab(new_filename_equiv, True)
+        print process_Network_Daypart_tab(new_filename_equiv, True)
+        print process_frequency_distribution_tab(new_filename_equiv, True)
+        print process_reach_by_week_tab(new_filename_equiv, True)
+        print process_frequency_distribution_by_net_tab(new_filename_equiv, True)
         print process_network_reach_tab(new_filename_equiv, True)
-        # print process_powerpoint_tab(new_filename_equiv, True)
+        print process_powerpoint_tab(new_filename_equiv, True)
         # print process_appendix_tab(new_filename_equiv, True)
         # print move_when_done(filename, new_filename_equiv, new_filename_unequiv)
