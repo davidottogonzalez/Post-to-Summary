@@ -1,4 +1,5 @@
 from openpyxl import load_workbook
+from openpyxl.styles import Font
 import shutil, os, glob, collections
 
 source_wb = None
@@ -110,7 +111,7 @@ def process_summary_tab(filename, equiv):
                                 source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num,
                                                                                                           column=18).value
                             format_cell(summary_sheet.cell(row=start_row, column=write_col),
-                                    source_sheet.cell(row=1, column=col_num).value)
+                                        source_sheet.cell(row=1, column=col_num).value)
                         write_col += 1
             else:
                 summary_sheet.cell(row=start_row, column=write_col).value = source_sheet.cell(row=row_num,
@@ -242,7 +243,7 @@ def process_summary_tab(filename, equiv):
 
                 format_cell(summary_sheet.cell(row=start_row, column=write_col),
                             source_spot_sheet.cell(row=1, column=col_num).value)
-                format_cell(program_metrics_sheet.cell(row=start_row, column=write_col),
+                format_cell(program_metrics_sheet.cell(row=p_start_row, column=write_col),
                             source_spot_sheet.cell(row=1, column=col_num).value)
                 write_col += 1
 
@@ -363,10 +364,106 @@ def process_Network_Daypart_tab(filename, equiv):
     source_network_day_sheet = source_wb.get_sheet_by_name('Network Daypart')
     dest_network_day_sheet = summary_wb.create_sheet("Network Daypart", 2)
 
+    dest_network_day_sheet['A1'].font = Font(bold=True)
+    dest_network_day_sheet[
+        'A1'] = 'EQUIVALIZED - Network Daypart Summary' if equiv else 'UNEQUIVALIZED - Network Daypart Summary'
+
+    write_row = 3
+
     for row_num in range(1, source_network_day_sheet.max_row + 1):
+        write_col = 1
+        write_row += 1
+
         for col_num in range(1, source_network_day_sheet.max_column + 1):
-            dest_network_day_sheet.cell(row=row_num, column=col_num).value = source_network_day_sheet.cell(row=row_num,
-                                                                                                           column=col_num).value
+            if source_network_day_sheet.cell(row=1, column=col_num).value in ['num_spots', 'equiv_units',
+                                                                              'total_impressions',
+                                                                              'total_unequiv_impressions',
+                                                                              'total_unequiv_frequency', 'GRPs',
+                                                                              'GRPs_unequiv',
+                                                                              'target_impressions',
+                                                                              'target_unequiv_impressions',
+                                                                              'target_unequiv_frequency', 'TRPs',
+                                                                              'TRPs_unequiv',
+                                                                              'target_index_impressions',
+                                                                              'target_index_unequiv_impressions',
+                                                                              'tCPM']:
+                if equiv:
+                    if source_network_day_sheet.cell(row=1, column=col_num).value in ['equiv_units',
+                                                                                      'total_impressions', 'GRPs',
+                                                                                      'target_impressions', 'TRPs',
+                                                                                      'target_index_impressions',
+                                                                                      'tCPM']:
+                        dest_network_day_sheet.cell(row=write_row,
+                                                    column=write_col).value = source_network_day_sheet.cell(row=row_num,
+                                                                                                            column=col_num).value
+                        format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
+                                    source_network_day_sheet.cell(row=1, column=col_num).value)
+                        write_col += 1
+
+                    if source_network_day_sheet.cell(row=1, column=col_num).value == 'total_unequiv_frequency':
+                        if row_num == 1:
+                            dest_network_day_sheet.cell(row=write_row, column=write_col).value = 'total_frequency'
+                        else:
+                            dest_network_day_sheet.cell(row=write_row, column=write_col).value = \
+                                source_network_day_sheet.cell(row=row_num,
+                                                              column=6).value / source_network_day_sheet.cell(
+                                    row=row_num,
+                                    column=8).value
+
+                        format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
+                                    source_network_day_sheet.cell(row=1, column=col_num).value)
+                        write_col += 1
+
+                    if source_network_day_sheet.cell(row=1, column=col_num).value == 'target_unequiv_frequency':
+                        if row_num == 1:
+                            dest_network_day_sheet.cell(row=write_row, column=write_col).value = 'target_frequency'
+                        else:
+                            dest_network_day_sheet.cell(row=write_row, column=write_col).value = \
+                                source_network_day_sheet.cell(row=row_num,
+                                                              column=18).value / source_network_day_sheet.cell(
+                                    row=row_num,
+                                    column=20).value
+                        format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
+                                    source_network_day_sheet.cell(row=1, column=col_num).value)
+                        write_col += 1
+
+                else:
+                    if source_network_day_sheet.cell(row=1, column=col_num).value in ['num_spots',
+                                                                                      'total_unequiv_impressions',
+                                                                                      'GRPs_unequiv',
+                                                                                      'target_unequiv_impressions',
+                                                                                      'TRPs_unequiv',
+                                                                                      'target_index_unequiv_impressions',
+                                                                                      'total_unequiv_frequency',
+                                                                                      'target_unequiv_frequency']:
+                        dest_network_day_sheet.cell(row=write_row,
+                                                    column=write_col).value = source_network_day_sheet.cell(row=row_num,
+                                                                                                            column=col_num).value
+                        format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
+                                    source_network_day_sheet.cell(row=1, column=col_num).value)
+                        write_col += 1
+
+                    if source_network_day_sheet.cell(row=1, column=col_num).value == 'tCPM':
+                        if row_num == 1:
+                            dest_network_day_sheet.cell(row=write_row, column=write_col).value = 'tCPM_unequiv'
+                        else:
+                            dest_network_day_sheet.cell(row=write_row, column=write_col).value = \
+                                source_network_day_sheet.cell(row=row_num,
+                                                              column=5).value * 1000 / source_network_day_sheet.cell(
+                                    row=row_num,
+                                    column=19).value
+                            format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
+                                        source_network_day_sheet.cell(row=1, column=col_num).value)
+                        write_col += 1
+
+            else:
+                dest_network_day_sheet.cell(row=write_row, column=write_col).value = source_network_day_sheet.cell(
+                    row=row_num,
+                    column=col_num).value
+
+                format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
+                            source_network_day_sheet.cell(row=1, column=col_num).value)
+                write_col += 1
 
     summary_wb.save(filename)
 
@@ -379,8 +476,11 @@ def process_frequency_distribution_tab(filename, equiv):
 
     source_freq_sheet = source_wb.get_sheet_by_name('Frequency Distribution')
     dest_freq_sheet = summary_wb.get_sheet_by_name('Frequency Distribution')
-    dest_row = 2
+    dest_row = 4
     source_rows = source_freq_sheet.max_row
+
+    dest_freq_sheet['A1'].font = Font(bold=True)
+    dest_freq_sheet['A1'] = 'EQUIVALIZED - Frequency Distribution' if equiv else 'UNEQUIVALIZED - Frequency Distribution'
 
     for row_num in range(1, source_rows + 1):
         if source_freq_sheet.cell(row=row_num, column=1).value == 'Spot' and source_freq_sheet.cell(row=row_num,
@@ -389,12 +489,15 @@ def process_frequency_distribution_tab(filename, equiv):
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'frequency':
                     dest_freq_sheet.cell(row=dest_row, column=1).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=1), '')
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'target':
                     dest_freq_sheet.cell(row=dest_row, column=3).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=3), '')
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'total':
                     dest_freq_sheet.cell(row=dest_row, column=2).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=2), '')
             dest_row += 1
 
     dest_row += 1
@@ -411,12 +514,15 @@ def process_frequency_distribution_tab(filename, equiv):
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'frequency':
                     dest_freq_sheet.cell(row=dest_row, column=1).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=1), '')
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'target':
                     dest_freq_sheet.cell(row=dest_row, column=3).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=3), '')
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'total':
                     dest_freq_sheet.cell(row=dest_row, column=2).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=2), '')
             dest_row += 1
 
     dest_freq_sheet.cell(row=dest_row, column=1).value = 'Total'
@@ -433,25 +539,30 @@ def process_frequency_distribution_tab(filename, equiv):
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'frequency':
                     dest_freq_sheet.cell(row=dest_row, column=1).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=1), '')
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'target':
                     dest_freq_sheet.cell(row=dest_row, column=3).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=3), '')
                 if source_freq_sheet.cell(row=1, column=col_num).value == 'total':
                     dest_freq_sheet.cell(row=dest_row, column=2).value = source_freq_sheet.cell(row=row_num,
                                                                                                 column=col_num).value
+                    format_cell(dest_freq_sheet.cell(row=dest_row, column=2), '')
             dest_row += 1
 
     # Calculations
     incrementor = 1
     sum_incrementor = 0
     network_start = 0
-    for row_num in range(2, dest_freq_sheet.max_row + 1):
+    for row_num in range(4, dest_freq_sheet.max_row + 1):
         if incrementor % 5 == 0 or not dest_freq_sheet.cell(row=row_num + 1, column=1).value:
             if dest_freq_sheet.cell(row=row_num, column=3).value:
                 dest_freq_sheet.cell(row=row_num, column=4).value = sum_incrementor + dest_freq_sheet.cell(row=row_num,
                                                                                                            column=3).value
             else:
                 dest_freq_sheet.cell(row=row_num, column=4).value = sum_incrementor
+
+            format_cell(dest_freq_sheet.cell(row=row_num, column=4), '')
             incrementor = 1
             sum_incrementor = 0
         else:
@@ -471,7 +582,9 @@ def process_frequency_distribution_tab(filename, equiv):
                                                                                                         column=3).value else 0
         else:
             dest_freq_sheet.cell(row=row_num, column=2).value = network_total
+            format_cell(dest_freq_sheet.cell(row=row_num, column=2), '')
             dest_freq_sheet.cell(row=row_num, column=3).value = network_target
+            format_cell(dest_freq_sheet.cell(row=row_num, column=3), '')
             break
 
     for row_num in range(network_start, dest_freq_sheet.max_row + 1):
@@ -479,6 +592,7 @@ def process_frequency_distribution_tab(filename, equiv):
             dest_freq_sheet.cell(row=row_num, column=4).value = dest_freq_sheet.cell(row=row_num,
                                                                                      column=3).value / network_target if dest_freq_sheet.cell(
                 row=row_num, column=3).value else 0
+            format_cell(dest_freq_sheet.cell(row=row_num, column=4), 'pct')
         else:
             break
 
@@ -498,6 +612,7 @@ def process_reach_by_week_tab(filename, equiv):
 
     equiv_list = [6, 11]
     unequiv_list = [7, 12]
+    equiv_calc_list = [8,13]
 
     for row_num in range(2, source_reach_by_week_sheet.max_row + 1):
         if source_reach_by_week_sheet.cell(row=row_num, column=1).value == 'Total':
@@ -507,10 +622,22 @@ def process_reach_by_week_tab(filename, equiv):
                 if equiv and col_num in unequiv_list:
                     continue
 
+                if equiv and col_num in equiv_calc_list:
+                    if col_num == 8:
+                        dest_reach_by_week_sheet.cell(row=dest_row, column=write_column).value = source_reach_by_week_sheet.cell(row=row_num, column=6).value / source_reach_by_week_sheet.cell(row=dest_row, column=4).value
+                        format_cell(dest_reach_by_week_sheet.cell(row=dest_row, column=write_column),source_reach_by_week_sheet.cell(row=1, column=col_num).value)
+                    if col_num == 13:
+                        dest_reach_by_week_sheet.cell(row=dest_row, column=write_column).value = source_reach_by_week_sheet.cell(row=dest_row,column=11).value / source_reach_by_week_sheet.cell(row=dest_row, column=9).value
+                        format_cell(dest_reach_by_week_sheet.cell(row=dest_row, column=write_column),source_reach_by_week_sheet.cell(row=1, column=col_num).value)
+                    write_column += 1
+                    continue
+
                 dest_reach_by_week_sheet.cell(row=dest_row,
                                               column=write_column).value = source_reach_by_week_sheet.cell(row=row_num,
                                                                                                            column=col_num).value
+                format_cell(dest_reach_by_week_sheet.cell(row=dest_row, column=write_column),source_reach_by_week_sheet.cell(row=1, column=col_num).value)
                 write_column += 1
+
             dest_row += 1
             write_column = 1
 
@@ -2459,21 +2586,21 @@ for filename in listing:
         if not new_filename_unequiv:
             print "error setting up " + filename
         print process_summary_tab(new_filename_unequiv, False)
-        # print process_Network_Daypart_tab(new_filename_unequiv, False)
-        # print process_frequency_distribution_tab(new_filename_unequiv, False)
-        # print process_reach_by_week_tab(new_filename_unequiv, False)
+        print process_Network_Daypart_tab(new_filename_unequiv, False)
+        print process_frequency_distribution_tab(new_filename_unequiv, False)
+        print process_reach_by_week_tab(new_filename_unequiv, False)
         # print process_frequency_distribution_by_net_tab(new_filename_unequiv, False)
         # print process_network_reach_tab(new_filename_unequiv, False)
         # print process_powerpoint_tab(new_filename_unequiv, False)
         # print process_appendix_tab(new_filename_unequiv, False)
-        # print "processing equiv"
+        print "processing equiv"
         new_filename_equiv = setup(filename, True)
         # if not new_filename_equiv:
         #     print "error setting up " + filename
         print process_summary_tab(new_filename_equiv, True)
-        # print process_Network_Daypart_tab(new_filename_equiv, True)
-        # print process_frequency_distribution_tab(new_filename_equiv, True)
-        # print process_reach_by_week_tab(new_filename_equiv, True)
+        print process_Network_Daypart_tab(new_filename_equiv, True)
+        print process_frequency_distribution_tab(new_filename_equiv, True)
+        print process_reach_by_week_tab(new_filename_equiv, True)
         # print process_frequency_distribution_by_net_tab(new_filename_equiv, True)
         # print process_network_reach_tab(new_filename_equiv, True)
         # print process_powerpoint_tab(new_filename_equiv, True)
