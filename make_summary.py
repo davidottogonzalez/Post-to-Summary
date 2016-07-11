@@ -607,12 +607,15 @@ def process_reach_by_week_tab(filename, equiv):
 
     source_reach_by_week_sheet = source_wb.get_sheet_by_name('Reach by Week')
     dest_reach_by_week_sheet = summary_wb.get_sheet_by_name('Reach by Week')
-    dest_row = 2
+    dest_row = 4
     write_column = 1
 
     equiv_list = [6, 11]
     unequiv_list = [7, 12]
     equiv_calc_list = [8,13]
+
+    dest_reach_by_week_sheet['A1'].font = Font(bold=True)
+    dest_reach_by_week_sheet['A1'] = 'EQUIVALIZED - Reach By Week' if equiv else 'UNEQUIVALIZED - Reach By Week'
 
     for row_num in range(2, source_reach_by_week_sheet.max_row + 1):
         if source_reach_by_week_sheet.cell(row=row_num, column=1).value == 'Total':
@@ -654,6 +657,9 @@ def process_frequency_distribution_by_net_tab(filename, equiv):
     source_rows = source_freq_sheet.max_row
     freq_obj = {}
 
+    dest_freq_sheet['A1'].font = Font(bold=True)
+    dest_freq_sheet['A1'] = 'EQUIVALIZED - Freq Distribution by Net' if equiv else 'UNEQUIVALIZED - Freq Distribution by Net'
+
     for row_num in range(2, source_rows + 1):
         if freq_obj.has_key(int(source_freq_sheet.cell(row=row_num, column=3).value)):
             if freq_obj[int(source_freq_sheet.cell(row=row_num, column=3).value)].has_key(
@@ -678,46 +684,80 @@ def process_frequency_distribution_by_net_tab(filename, equiv):
                         {'target': source_freq_sheet.cell(row=row_num, column=4).value,
                          'total': source_freq_sheet.cell(row=row_num, column=5).value}}]}
 
-    write_row = 2
+    write_row = 4
     for freq, row_list in collections.OrderedDict(sorted(freq_obj.items())).items():
         dest_freq_sheet.cell(row=write_row, column=1).value = freq
         for row_obj in row_list['Spot']:
             if row_obj.has_key('Total'):
                 dest_freq_sheet.cell(row=write_row, column=2).value = row_obj['Total']['total']
                 dest_freq_sheet.cell(row=write_row, column=3).value = row_obj['Total']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=2), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=3), '')
             if row_obj.has_key('Bravo'):
                 dest_freq_sheet.cell(row=write_row, column=4).value = row_obj['Bravo']['total']
                 dest_freq_sheet.cell(row=write_row, column=5).value = row_obj['Bravo']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=4), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=5), '')
             if row_obj.has_key('CNBC'):
                 dest_freq_sheet.cell(row=write_row, column=6).value = row_obj['CNBC']['total']
                 dest_freq_sheet.cell(row=write_row, column=7).value = row_obj['CNBC']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=6), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=7), '')
             if row_obj.has_key('E!'):
                 dest_freq_sheet.cell(row=write_row, column=8).value = row_obj['E!']['total']
                 dest_freq_sheet.cell(row=write_row, column=9).value = row_obj['E!']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=8), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=9), '')
             if row_obj.has_key('Golf Channel'):
                 dest_freq_sheet.cell(row=write_row, column=10).value = row_obj['Golf Channel']['total']
                 dest_freq_sheet.cell(row=write_row, column=11).value = row_obj['Golf Channel']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=10), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=11), '')
             if row_obj.has_key('MSNBC'):
                 dest_freq_sheet.cell(row=write_row, column=12).value = row_obj['MSNBC']['total']
                 dest_freq_sheet.cell(row=write_row, column=13).value = row_obj['MSNBC']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=12), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=13), '')
             if row_obj.has_key('NBCSN'):
                 dest_freq_sheet.cell(row=write_row, column=14).value = row_obj['NBCSN']['total']
                 dest_freq_sheet.cell(row=write_row, column=15).value = row_obj['NBCSN']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=14), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=15), '')
             if row_obj.has_key('Oxygen'):
                 dest_freq_sheet.cell(row=write_row, column=16).value = row_obj['Oxygen']['total']
                 dest_freq_sheet.cell(row=write_row, column=17).value = row_obj['Oxygen']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=16), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=17), '')
             if row_obj.has_key('Syfy'):
                 dest_freq_sheet.cell(row=write_row, column=18).value = row_obj['Syfy']['total']
                 dest_freq_sheet.cell(row=write_row, column=19).value = row_obj['Syfy']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=18), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=19), '')
             if row_obj.has_key('USA'):
                 dest_freq_sheet.cell(row=write_row, column=20).value = row_obj['USA']['total']
                 dest_freq_sheet.cell(row=write_row, column=21).value = row_obj['USA']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=20), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=21), '')
             if row_obj.has_key('NBC'):
                 dest_freq_sheet.cell(row=write_row, column=22).value = row_obj['NBC']['total']
                 dest_freq_sheet.cell(row=write_row, column=23).value = row_obj['NBC']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=22), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=23), '')
             if row_obj.has_key('Esquire'):
                 dest_freq_sheet.cell(row=write_row, column=24).value = row_obj['Esquire']['total']
                 dest_freq_sheet.cell(row=write_row, column=25).value = row_obj['Esquire']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=24), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=25), '')
+            if row_obj.has_key('Sprout'):
+                dest_freq_sheet.cell(row=write_row, column=26).value = row_obj['Sprout']['total']
+                dest_freq_sheet.cell(row=write_row, column=27).value = row_obj['Sprout']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=26), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=27), '')
+            if row_obj.has_key('Telemundo'):
+                dest_freq_sheet.cell(row=write_row, column=28).value = row_obj['Telemundo']['total']
+                dest_freq_sheet.cell(row=write_row, column=29).value = row_obj['Telemundo']['target']
+                format_cell(dest_freq_sheet.cell(row=write_row, column=28), '')
+                format_cell(dest_freq_sheet.cell(row=write_row, column=29), '')
         write_row += 1
 
     write_row += 1
@@ -733,39 +773,73 @@ def process_frequency_distribution_by_net_tab(filename, equiv):
                 if row_obj.has_key('Total'):
                     dest_freq_sheet.cell(row=write_row, column=2).value = row_obj['Total']['total']
                     dest_freq_sheet.cell(row=write_row, column=3).value = row_obj['Total']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=2), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=3), '')
                 if row_obj.has_key('Bravo'):
                     dest_freq_sheet.cell(row=write_row, column=4).value = row_obj['Bravo']['total']
                     dest_freq_sheet.cell(row=write_row, column=5).value = row_obj['Bravo']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=4), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=5), '')
                 if row_obj.has_key('CNBC'):
                     dest_freq_sheet.cell(row=write_row, column=6).value = row_obj['CNBC']['total']
                     dest_freq_sheet.cell(row=write_row, column=7).value = row_obj['CNBC']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=6), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=7), '')
                 if row_obj.has_key('E!'):
                     dest_freq_sheet.cell(row=write_row, column=8).value = row_obj['E!']['total']
                     dest_freq_sheet.cell(row=write_row, column=9).value = row_obj['E!']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=8), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=9), '')
                 if row_obj.has_key('Golf Channel'):
                     dest_freq_sheet.cell(row=write_row, column=10).value = row_obj['Golf Channel']['total']
                     dest_freq_sheet.cell(row=write_row, column=11).value = row_obj['Golf Channel']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=10), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=11), '')
                 if row_obj.has_key('MSNBC'):
                     dest_freq_sheet.cell(row=write_row, column=12).value = row_obj['MSNBC']['total']
                     dest_freq_sheet.cell(row=write_row, column=13).value = row_obj['MSNBC']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=12), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=13), '')
                 if row_obj.has_key('NBCSN'):
-                    dest_freq_sheet.cell(row=write_row, column=13).value = row_obj['NBCSN']['total']
-                    dest_freq_sheet.cell(row=write_row, column=14).value = row_obj['NBCSN']['target']
+                    dest_freq_sheet.cell(row=write_row, column=14).value = row_obj['NBCSN']['total']
+                    dest_freq_sheet.cell(row=write_row, column=15).value = row_obj['NBCSN']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=14), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=15), '')
                 if row_obj.has_key('Oxygen'):
-                    dest_freq_sheet.cell(row=write_row, column=15).value = row_obj['Oxygen']['total']
-                    dest_freq_sheet.cell(row=write_row, column=16).value = row_obj['Oxygen']['target']
+                    dest_freq_sheet.cell(row=write_row, column=16).value = row_obj['Oxygen']['total']
+                    dest_freq_sheet.cell(row=write_row, column=17).value = row_obj['Oxygen']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=16), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=17), '')
                 if row_obj.has_key('Syfy'):
-                    dest_freq_sheet.cell(row=write_row, column=17).value = row_obj['Syfy']['total']
-                    dest_freq_sheet.cell(row=write_row, column=18).value = row_obj['Syfy']['target']
+                    dest_freq_sheet.cell(row=write_row, column=18).value = row_obj['Syfy']['total']
+                    dest_freq_sheet.cell(row=write_row, column=19).value = row_obj['Syfy']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=18), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=19), '')
                 if row_obj.has_key('USA'):
-                    dest_freq_sheet.cell(row=write_row, column=19).value = row_obj['USA']['total']
-                    dest_freq_sheet.cell(row=write_row, column=20).value = row_obj['USA']['target']
+                    dest_freq_sheet.cell(row=write_row, column=20).value = row_obj['USA']['total']
+                    dest_freq_sheet.cell(row=write_row, column=21).value = row_obj['USA']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=20), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=21), '')
                 if row_obj.has_key('NBC'):
-                    dest_freq_sheet.cell(row=write_row, column=21).value = row_obj['NBC']['total']
-                    dest_freq_sheet.cell(row=write_row, column=22).value = row_obj['NBC']['target']
+                    dest_freq_sheet.cell(row=write_row, column=22).value = row_obj['NBC']['total']
+                    dest_freq_sheet.cell(row=write_row, column=23).value = row_obj['NBC']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=22), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=23), '')
                 if row_obj.has_key('Esquire'):
-                    dest_freq_sheet.cell(row=write_row, column=23).value = row_obj['Esquire']['total']
-                    dest_freq_sheet.cell(row=write_row, column=24).value = row_obj['Esquire']['target']
+                    dest_freq_sheet.cell(row=write_row, column=24).value = row_obj['Esquire']['total']
+                    dest_freq_sheet.cell(row=write_row, column=25).value = row_obj['Esquire']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=24), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=25), '')
+                if row_obj.has_key('Sprout'):
+                    dest_freq_sheet.cell(row=write_row, column=26).value = row_obj['Sprout']['total']
+                    dest_freq_sheet.cell(row=write_row, column=27).value = row_obj['Sprout']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=26), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=27), '')
+                if row_obj.has_key('Telemundo'):
+                    dest_freq_sheet.cell(row=write_row, column=28).value = row_obj['Telemundo']['total']
+                    dest_freq_sheet.cell(row=write_row, column=29).value = row_obj['Telemundo']['target']
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=28), '')
+                    format_cell(dest_freq_sheet.cell(row=write_row, column=29), '')
             write_row += 1
 
     summary_wb.save(filename)
@@ -781,6 +855,9 @@ def process_network_reach_tab(filename, equiv):
     dest_reach_net_sheet = summary_wb.get_sheet_by_name('Network Reach by Week')
     source_rows = source_reach_net_sheet.max_row
     reach_net_obj = {}
+
+    dest_reach_net_sheet['A1'].font = Font(bold=True)
+    dest_reach_net_sheet['A1'] = 'EQUIVALIZED - Network Reach By Week' if equiv else 'UNEQUIVALIZED - Network Reach By Week'
 
     for row_num in range(2, source_rows + 1):
         if reach_net_obj.has_key(int(source_reach_net_sheet.cell(row=row_num, column=2).value)):
@@ -811,559 +888,129 @@ def process_network_reach_tab(filename, equiv):
                      'target_impressions': source_reach_net_sheet.cell(row=row_num, column=11).value,
                      'target_impressions_unequiv': source_reach_net_sheet.cell(row=row_num, column=12).value,
                      'target_frequency_unequiv': source_reach_net_sheet.cell(row=row_num, column=13).value}}
-    write_row = 2
+    write_row = 4
     for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
         dest_reach_net_sheet.cell(row=write_row, column=1).value = row_list['Total']['weekof']
         dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['Total']['target_pct']
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=2), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['NBC']['target_pct'] if row_list.has_key(
             'NBC') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=3), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Total']['weekof']
         dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['Bravo']['target_pct'] if row_list.has_key(
             'Bravo') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=6), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['CNBC']['target_pct'] if row_list.has_key(
             'CNBC') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=7), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['Chiller'][
             'target_pct'] if row_list.has_key('Chiller') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=8), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['E!']['target_pct'] if row_list.has_key(
             'E!') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=9), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['Esquire'][
             'target_pct'] if row_list.has_key('Esquire') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=10), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=11).value = row_list['Golf Channel'][
             'target_pct'] if row_list.has_key('Golf Channel') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=11), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=12).value = row_list['MSNBC']['target_pct'] if row_list.has_key(
             'MSNBC') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=12), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=13).value = row_list['NBCSN']['target_pct'] if row_list.has_key(
             'NBCSN') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=13), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=14).value = row_list['Oxygen'][
             'target_pct'] if row_list.has_key('Oxygen') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=14), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=15).value = row_list['Syfy']['target_pct'] if row_list.has_key(
             'Syfy') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=15), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=16).value = row_list['USA']['target_pct'] if row_list.has_key(
             'USA') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=16), 'pct')
+        dest_reach_net_sheet.cell(row=write_row, column=17).value = row_list['Sprout']['target_pct'] if row_list.has_key(
+            'Sprout') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=17), 'pct')
+        dest_reach_net_sheet.cell(row=write_row, column=18).value = row_list['Telemundo']['target_pct'] if row_list.has_key(
+            'Telemundo') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=18), 'pct')
         write_row += 1
 
-    # Bravo
-    if row_list.has_key('Bravo'):
-        write_row += 3
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'Bravo'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
+    networks = ['Bravo','CNBC','Chiller','E!','Esquire','Golf Channel','MSNBC','NBC','NBCSN','Oxygen','Syfy','USA','Sprout','Telemundo']
+    
+    for network in networks:
+        if row_list.has_key(network):
+            write_row += 3
+            dest_reach_net_sheet.cell(row=write_row, column=1).value = network
+            write_row += 1
+            dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
+            dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
+            dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
+            format_cell(dest_reach_net_sheet.cell(row=write_row, column=3), '')
+            dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
+            format_cell(dest_reach_net_sheet.cell(row=write_row, column=4), 'pct')
+            if equiv:
+                dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
+                dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
+            else:
+                dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
+                dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_unequiv_total'
+            format_cell(dest_reach_net_sheet.cell(row=write_row, column=5), '')
+            format_cell(dest_reach_net_sheet.cell(row=write_row, column=6), '')
+            dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
+            format_cell(dest_reach_net_sheet.cell(row=write_row, column=7), '')
+            dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
+            format_cell(dest_reach_net_sheet.cell(row=write_row, column=8), 'pct')
+            if equiv:
+                dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
+                dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
+            else:
+                dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
+                dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_unequiv_target'
+            format_cell(dest_reach_net_sheet.cell(row=write_row, column=9), '')
+            format_cell(dest_reach_net_sheet.cell(row=write_row, column=10), '')
 
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['Bravo']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['Bravo']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['Bravo']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Bravo']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Bravo'][
-                    'total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['Bravo']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['Bravo']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['Bravo']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Bravo']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Bravo'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['Bravo']['target_frequency_unequiv']
             write_row += 1
 
-    # CNBC
-    if row_list.has_key('CNBC'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'CNBC'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
+            for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
+                dest_reach_net_sheet.cell(row=write_row, column=1).value = week
+                dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list[network]['weekof']
+                dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list[network]['total']
+                format_cell(dest_reach_net_sheet.cell(row=write_row, column=3), '')
+                dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list[network]['total_pct']
+                format_cell(dest_reach_net_sheet.cell(row=write_row, column=4), 'pct')
+                if equiv:
+                    dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list[network]['total_impressions']
+                    dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list[network]['total_impressions'] / \
+                                                                               row_list[network]['total']
+                else:
+                    dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list[network][
+                        'total_impressions_unequiv']
+                    dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list[network][
+                        'total_frequency_unequiv']
+                format_cell(dest_reach_net_sheet.cell(row=write_row, column=5), '')
+                format_cell(dest_reach_net_sheet.cell(row=write_row, column=6), '')
 
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['CNBC']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['CNBC']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['CNBC']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['CNBC']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['CNBC']['total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['CNBC']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['CNBC']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['CNBC']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['CNBC']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['CNBC'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['CNBC']['target_frequency_unequiv']
-            write_row += 1
+                dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list[network]['target']
+                format_cell(dest_reach_net_sheet.cell(row=write_row, column=7), '')
+                dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list[network]['target_pct']
+                format_cell(dest_reach_net_sheet.cell(row=write_row, column=8), 'pct')
+                if equiv:
+                    dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list[network]['target_impressions']
+                    dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list[network][
+                                                                                    'target_impressions'] / \
+                                                                                row_list[network]['target']
+                else:
+                    dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list[network][
+                        'target_impressions_unequiv']
+                    dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list[network][
+                        'target_frequency_unequiv']
+                format_cell(dest_reach_net_sheet.cell(row=write_row, column=9), '')
+                format_cell(dest_reach_net_sheet.cell(row=write_row, column=10), '')
 
-    # Chiller
-    if row_list.has_key('Chiller'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'Chiller'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['Chiller']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['Chiller']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['Chiller']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Chiller']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Chiller'][
-                    'total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['Chiller']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['Chiller']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['Chiller']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Chiller']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Chiller'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['Chiller']['target_frequency_unequiv']
-            write_row += 1
-
-    # E!
-    if row_list.has_key('E!'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'E!'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['E!']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['E!']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['E!']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['E!']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['E!']['total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['E!']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['E!']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['E!']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['E!']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['E!']['target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['E!']['target_frequency_unequiv']
-            write_row += 1
-
-    # Esquire
-    if row_list.has_key('Esquire'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'Esquire'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['Esquire']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['Esquire']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['Esquire']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Esquire']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Esquire'][
-                    'total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['Esquire']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['Esquire']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['Esquire']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Esquire']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Esquire'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['Esquire']['target_frequency_unequiv']
-            write_row += 1
-
-    # Golf Channel
-    if row_list.has_key('Golf Channel'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'Golf Channel'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['Golf Channel']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['Golf Channel']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['Golf Channel']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Golf Channel']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Golf Channel'][
-                    'total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['Golf Channel'][
-                'total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['Golf Channel']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['Golf Channel']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Golf Channel'][
-                    'target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Golf Channel'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['Golf Channel'][
-                'target_frequency_unequiv']
-            write_row += 1
-
-    # MSNBC
-    if row_list.has_key('MSNBC'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'MSNBC'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['MSNBC']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['MSNBC']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['MSNBC']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['MSNBC']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['MSNBC'][
-                    'total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['MSNBC']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['MSNBC']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['MSNBC']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['MSNBC']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['MSNBC'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['MSNBC']['target_frequency_unequiv']
-            write_row += 1
-
-    # NBC
-    if row_list.has_key('NBC'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'NBC'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['NBC']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['NBC']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['NBC']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['NBC']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['NBC']['total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['NBC']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['NBC']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['NBC']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['NBC']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['NBC']['target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['NBC']['target_frequency_unequiv']
-            write_row += 1
-
-    # NBCSN
-    if row_list.has_key('NBCSN'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'NBCSN'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['NBCSN']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['NBCSN']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['NBCSN']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['NBCSN']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['NBCSN'][
-                    'total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['NBCSN']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['NBCSN']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['NBCSN']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['NBCSN']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['NBCSN'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['NBCSN']['target_frequency_unequiv']
-            write_row += 1
-
-    # Oxygen
-    if row_list.has_key('Oxygen'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'Oxygen'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['Oxygen']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['Oxygen']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['Oxygen']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Oxygen']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Oxygen'][
-                    'total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['Oxygen']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['Oxygen']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['Oxygen']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Oxygen']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Oxygen'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['Oxygen']['target_frequency_unequiv']
-            write_row += 1
-
-    # Syfy
-    if row_list.has_key('Syfy'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'Syfy'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['Syfy']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['Syfy']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['Syfy']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Syfy']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['Syfy']['total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['Syfy']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['Syfy']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['Syfy']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Syfy']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['Syfy'][
-                    'target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['Syfy']['target_frequency_unequiv']
-            write_row += 1
-
-    # USA
-    if row_list.has_key('USA'):
-        write_row += 2
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'USA'
-        write_row += 1
-        dest_reach_net_sheet.cell(row=write_row, column=1).value = 'week'
-        dest_reach_net_sheet.cell(row=write_row, column=2).value = 'week_of'
-        dest_reach_net_sheet.cell(row=write_row, column=3).value = 'reach_total'
-        dest_reach_net_sheet.cell(row=write_row, column=4).value = 'reach_pct_total'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_total'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=5).value = 'impressions_unequiv_total'
-        dest_reach_net_sheet.cell(row=write_row, column=6).value = 'avg_freq_total'
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = 'reach_target'
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = 'reach_pct_target'
-        if equiv:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_target'
-        else:
-            dest_reach_net_sheet.cell(row=write_row, column=9).value = 'impressions_unequiv_target'
-        dest_reach_net_sheet.cell(row=write_row, column=10).value = 'avg_freq_target'
-        write_row += 1
-
-        for week, row_list in collections.OrderedDict(sorted(reach_net_obj.items())).items():
-            dest_reach_net_sheet.cell(row=write_row, column=1).value = week
-            dest_reach_net_sheet.cell(row=write_row, column=2).value = row_list['USA']['weekof']
-            dest_reach_net_sheet.cell(row=write_row, column=3).value = row_list['USA']['total']
-            dest_reach_net_sheet.cell(row=write_row, column=4).value = row_list['USA']['total_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['USA']['total_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=5).value = row_list['USA']['total_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['USA']['total_frequency_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['USA']['target']
-            dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['USA']['target_pct']
-            if equiv:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['USA']['target_impressions']
-            else:
-                dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['USA']['target_impressions_unequiv']
-            dest_reach_net_sheet.cell(row=write_row, column=10).value = row_list['USA']['target_frequency_unequiv']
-            write_row += 1
+                write_row += 1
 
     summary_wb.save(filename)
 
@@ -2585,24 +2232,24 @@ for filename in listing:
         new_filename_unequiv = setup(filename, False)
         if not new_filename_unequiv:
             print "error setting up " + filename
-        print process_summary_tab(new_filename_unequiv, False)
-        print process_Network_Daypart_tab(new_filename_unequiv, False)
-        print process_frequency_distribution_tab(new_filename_unequiv, False)
-        print process_reach_by_week_tab(new_filename_unequiv, False)
+        # print process_summary_tab(new_filename_unequiv, False)
+        # print process_Network_Daypart_tab(new_filename_unequiv, False)
+        # print process_frequency_distribution_tab(new_filename_unequiv, False)
+        # print process_reach_by_week_tab(new_filename_unequiv, False)
         # print process_frequency_distribution_by_net_tab(new_filename_unequiv, False)
-        # print process_network_reach_tab(new_filename_unequiv, False)
+        print process_network_reach_tab(new_filename_unequiv, False)
         # print process_powerpoint_tab(new_filename_unequiv, False)
         # print process_appendix_tab(new_filename_unequiv, False)
         print "processing equiv"
         new_filename_equiv = setup(filename, True)
         # if not new_filename_equiv:
         #     print "error setting up " + filename
-        print process_summary_tab(new_filename_equiv, True)
-        print process_Network_Daypart_tab(new_filename_equiv, True)
-        print process_frequency_distribution_tab(new_filename_equiv, True)
-        print process_reach_by_week_tab(new_filename_equiv, True)
+        # print process_summary_tab(new_filename_equiv, True)
+        # print process_Network_Daypart_tab(new_filename_equiv, True)
+        # print process_frequency_distribution_tab(new_filename_equiv, True)
+        # print process_reach_by_week_tab(new_filename_equiv, True)
         # print process_frequency_distribution_by_net_tab(new_filename_equiv, True)
-        # print process_network_reach_tab(new_filename_equiv, True)
+        print process_network_reach_tab(new_filename_equiv, True)
         # print process_powerpoint_tab(new_filename_equiv, True)
         # print process_appendix_tab(new_filename_equiv, True)
         # print move_when_done(filename, new_filename_equiv, new_filename_unequiv)
