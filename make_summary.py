@@ -2235,7 +2235,7 @@ def move_when_done(processed, summary_equiv, summary_unequiv):
     return True
 
 
-listing = glob.glob('./preprocessed/k*.xlsx')
+listing = glob.glob('./preprocessed/*.xlsx')
 for filename in listing:
     filename = os.path.basename(filename)
     if os.path.isfile('./preprocessed/' + filename):
@@ -2263,4 +2263,4 @@ for filename in listing:
         print process_network_reach_tab(new_filename_equiv, True)
         print process_powerpoint_tab(new_filename_equiv, True)
         print process_appendix_tab(new_filename_equiv, True)
-        # print move_when_done(filename, new_filename_equiv, new_filename_unequiv)
+        print move_when_done(filename, new_filename_equiv, new_filename_unequiv)
