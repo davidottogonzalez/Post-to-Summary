@@ -41,11 +41,21 @@ def process_summary_tab(filename, equiv):
     program_metrics_sheet = summary_wb.get_sheet_by_name('Program Metrics')
     start_row = 0
     net_sum_headers_row = 0
+    network_list = []
 
     summary_sheet['A1'] = 'EQUIVALIZED - Campaign Summary' if equiv else 'UNEQUIVALIZED - Campaign Summary'
     summary_sheet.cell(row=summary_sheet.max_row + 2, column=1).value = 'Network Summary'
 
-    for row_num in range(1, source_sheet.max_row + 1):
+    # Get network order
+    for row_num in range(3, source_sheet.max_row + 1):
+        network_list.append((source_sheet['A'+str(row_num)].value,row_num))
+    network_list = sorted(network_list, key=lambda tup: tup[0])
+    row_list = [1,2]
+
+    for network in network_list:
+        row_list.append(network[1])
+
+    for row_num in row_list:
         if start_row == 0:
             start_row = summary_sheet.max_row + 2
             net_sum_headers_row = summary_sheet.max_row + 2
@@ -367,9 +377,25 @@ def process_Network_Daypart_tab(filename, equiv):
     dest_network_day_sheet['A1'].font = Font(bold=True)
     dest_network_day_sheet['A1'] = 'EQUIVALIZED - Network Daypart Summary' if equiv else 'UNEQUIVALIZED - Network Daypart Summary'
 
-    write_row = 2
+    # Get first non-Total row
+    first_non_total = 0
+    for row_num in range(2, source_network_day_sheet.max_row + 1):
+        if source_network_day_sheet['A'+str(row_num)].value != 'Total':
+            first_non_total = row_num
+            break
 
-    for row_num in range(1, source_network_day_sheet.max_row + 1):
+    # Get network order
+    network_list = []
+    for row_num in range(first_non_total, source_network_day_sheet.max_row + 1):
+        network_list.append((source_network_day_sheet['A' + str(row_num)].value, row_num))
+    network_list.sort()
+    row_list = range(1,first_non_total)
+
+    for network in network_list:
+        row_list.append(network[1])
+
+    write_row = 2
+    for row_num in row_list:
         write_col = 1
         write_row += 1
 
@@ -707,54 +733,54 @@ def process_frequency_distribution_by_net_tab(filename, equiv):
                 dest_freq_sheet.cell(row=write_row, column=9).value = row_obj['E!']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=8), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=9), '')
-            if row_obj.has_key('Golf Channel'):
-                dest_freq_sheet.cell(row=write_row, column=10).value = row_obj['Golf Channel']['total']
-                dest_freq_sheet.cell(row=write_row, column=11).value = row_obj['Golf Channel']['target']
+            if row_obj.has_key('Esquire'):
+                dest_freq_sheet.cell(row=write_row, column=10).value = row_obj['Esquire']['total']
+                dest_freq_sheet.cell(row=write_row, column=11).value = row_obj['Esquire']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=10), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=11), '')
-            if row_obj.has_key('MSNBC'):
-                dest_freq_sheet.cell(row=write_row, column=12).value = row_obj['MSNBC']['total']
-                dest_freq_sheet.cell(row=write_row, column=13).value = row_obj['MSNBC']['target']
+            if row_obj.has_key('Golf Channel'):
+                dest_freq_sheet.cell(row=write_row, column=12).value = row_obj['Golf Channel']['total']
+                dest_freq_sheet.cell(row=write_row, column=13).value = row_obj['Golf Channel']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=12), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=13), '')
-            if row_obj.has_key('NBCSN'):
-                dest_freq_sheet.cell(row=write_row, column=14).value = row_obj['NBCSN']['total']
-                dest_freq_sheet.cell(row=write_row, column=15).value = row_obj['NBCSN']['target']
+            if row_obj.has_key('MSNBC'):
+                dest_freq_sheet.cell(row=write_row, column=14).value = row_obj['MSNBC']['total']
+                dest_freq_sheet.cell(row=write_row, column=15).value = row_obj['MSNBC']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=14), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=15), '')
-            if row_obj.has_key('Oxygen'):
-                dest_freq_sheet.cell(row=write_row, column=16).value = row_obj['Oxygen']['total']
-                dest_freq_sheet.cell(row=write_row, column=17).value = row_obj['Oxygen']['target']
+            if row_obj.has_key('NBC'):
+                dest_freq_sheet.cell(row=write_row, column=16).value = row_obj['NBC']['total']
+                dest_freq_sheet.cell(row=write_row, column=17).value = row_obj['NBC']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=16), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=17), '')
-            if row_obj.has_key('Syfy'):
-                dest_freq_sheet.cell(row=write_row, column=18).value = row_obj['Syfy']['total']
-                dest_freq_sheet.cell(row=write_row, column=19).value = row_obj['Syfy']['target']
+            if row_obj.has_key('NBCSN'):
+                dest_freq_sheet.cell(row=write_row, column=18).value = row_obj['NBCSN']['total']
+                dest_freq_sheet.cell(row=write_row, column=19).value = row_obj['NBCSN']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=18), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=19), '')
-            if row_obj.has_key('USA'):
-                dest_freq_sheet.cell(row=write_row, column=20).value = row_obj['USA']['total']
-                dest_freq_sheet.cell(row=write_row, column=21).value = row_obj['USA']['target']
+            if row_obj.has_key('Oxygen'):
+                dest_freq_sheet.cell(row=write_row, column=20).value = row_obj['Oxygen']['total']
+                dest_freq_sheet.cell(row=write_row, column=21).value = row_obj['Oxygen']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=20), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=21), '')
-            if row_obj.has_key('NBC'):
-                dest_freq_sheet.cell(row=write_row, column=22).value = row_obj['NBC']['total']
-                dest_freq_sheet.cell(row=write_row, column=23).value = row_obj['NBC']['target']
+            if row_obj.has_key('Sprout'):
+                dest_freq_sheet.cell(row=write_row, column=22).value = row_obj['Sprout']['total']
+                dest_freq_sheet.cell(row=write_row, column=23).value = row_obj['Sprout']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=22), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=23), '')
-            if row_obj.has_key('Esquire'):
-                dest_freq_sheet.cell(row=write_row, column=24).value = row_obj['Esquire']['total']
-                dest_freq_sheet.cell(row=write_row, column=25).value = row_obj['Esquire']['target']
+            if row_obj.has_key('Syfy'):
+                dest_freq_sheet.cell(row=write_row, column=24).value = row_obj['Syfy']['total']
+                dest_freq_sheet.cell(row=write_row, column=25).value = row_obj['Syfy']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=24), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=25), '')
-            if row_obj.has_key('Sprout'):
-                dest_freq_sheet.cell(row=write_row, column=26).value = row_obj['Sprout']['total']
-                dest_freq_sheet.cell(row=write_row, column=27).value = row_obj['Sprout']['target']
+            if row_obj.has_key('Telemundo'):
+                dest_freq_sheet.cell(row=write_row, column=26).value = row_obj['Telemundo']['total']
+                dest_freq_sheet.cell(row=write_row, column=27).value = row_obj['Telemundo']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=26), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=27), '')
-            if row_obj.has_key('Telemundo'):
-                dest_freq_sheet.cell(row=write_row, column=28).value = row_obj['Telemundo']['total']
-                dest_freq_sheet.cell(row=write_row, column=29).value = row_obj['Telemundo']['target']
+            if row_obj.has_key('USA'):
+                dest_freq_sheet.cell(row=write_row, column=28).value = row_obj['USA']['total']
+                dest_freq_sheet.cell(row=write_row, column=29).value = row_obj['USA']['target']
                 format_cell(dest_freq_sheet.cell(row=write_row, column=28), '')
                 format_cell(dest_freq_sheet.cell(row=write_row, column=29), '')
         write_row += 1
@@ -789,54 +815,54 @@ def process_frequency_distribution_by_net_tab(filename, equiv):
                     dest_freq_sheet.cell(row=write_row, column=9).value = row_obj['E!']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=8), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=9), '')
-                if row_obj.has_key('Golf Channel'):
-                    dest_freq_sheet.cell(row=write_row, column=10).value = row_obj['Golf Channel']['total']
-                    dest_freq_sheet.cell(row=write_row, column=11).value = row_obj['Golf Channel']['target']
+                if row_obj.has_key('Esquire'):
+                    dest_freq_sheet.cell(row=write_row, column=10).value = row_obj['Esquire']['total']
+                    dest_freq_sheet.cell(row=write_row, column=11).value = row_obj['Esquire']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=10), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=11), '')
-                if row_obj.has_key('MSNBC'):
-                    dest_freq_sheet.cell(row=write_row, column=12).value = row_obj['MSNBC']['total']
-                    dest_freq_sheet.cell(row=write_row, column=13).value = row_obj['MSNBC']['target']
+                if row_obj.has_key('Golf Channel'):
+                    dest_freq_sheet.cell(row=write_row, column=12).value = row_obj['Golf Channel']['total']
+                    dest_freq_sheet.cell(row=write_row, column=13).value = row_obj['Golf Channel']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=12), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=13), '')
-                if row_obj.has_key('NBCSN'):
-                    dest_freq_sheet.cell(row=write_row, column=14).value = row_obj['NBCSN']['total']
-                    dest_freq_sheet.cell(row=write_row, column=15).value = row_obj['NBCSN']['target']
+                if row_obj.has_key('MSNBC'):
+                    dest_freq_sheet.cell(row=write_row, column=14).value = row_obj['MSNBC']['total']
+                    dest_freq_sheet.cell(row=write_row, column=15).value = row_obj['MSNBC']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=14), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=15), '')
-                if row_obj.has_key('Oxygen'):
-                    dest_freq_sheet.cell(row=write_row, column=16).value = row_obj['Oxygen']['total']
-                    dest_freq_sheet.cell(row=write_row, column=17).value = row_obj['Oxygen']['target']
+                if row_obj.has_key('NBC'):
+                    dest_freq_sheet.cell(row=write_row, column=16).value = row_obj['NBC']['total']
+                    dest_freq_sheet.cell(row=write_row, column=17).value = row_obj['NBC']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=16), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=17), '')
-                if row_obj.has_key('Syfy'):
-                    dest_freq_sheet.cell(row=write_row, column=18).value = row_obj['Syfy']['total']
-                    dest_freq_sheet.cell(row=write_row, column=19).value = row_obj['Syfy']['target']
+                if row_obj.has_key('NBCSN'):
+                    dest_freq_sheet.cell(row=write_row, column=18).value = row_obj['NBCSN']['total']
+                    dest_freq_sheet.cell(row=write_row, column=19).value = row_obj['NBCSN']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=18), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=19), '')
-                if row_obj.has_key('USA'):
-                    dest_freq_sheet.cell(row=write_row, column=20).value = row_obj['USA']['total']
-                    dest_freq_sheet.cell(row=write_row, column=21).value = row_obj['USA']['target']
+                if row_obj.has_key('Oxygen'):
+                    dest_freq_sheet.cell(row=write_row, column=20).value = row_obj['Oxygen']['total']
+                    dest_freq_sheet.cell(row=write_row, column=21).value = row_obj['Oxygen']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=20), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=21), '')
-                if row_obj.has_key('NBC'):
-                    dest_freq_sheet.cell(row=write_row, column=22).value = row_obj['NBC']['total']
-                    dest_freq_sheet.cell(row=write_row, column=23).value = row_obj['NBC']['target']
+                if row_obj.has_key('Sprout'):
+                    dest_freq_sheet.cell(row=write_row, column=22).value = row_obj['Sprout']['total']
+                    dest_freq_sheet.cell(row=write_row, column=23).value = row_obj['Sprout']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=22), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=23), '')
-                if row_obj.has_key('Esquire'):
-                    dest_freq_sheet.cell(row=write_row, column=24).value = row_obj['Esquire']['total']
-                    dest_freq_sheet.cell(row=write_row, column=25).value = row_obj['Esquire']['target']
+                if row_obj.has_key('Syfy'):
+                    dest_freq_sheet.cell(row=write_row, column=24).value = row_obj['Syfy']['total']
+                    dest_freq_sheet.cell(row=write_row, column=25).value = row_obj['Syfy']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=24), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=25), '')
-                if row_obj.has_key('Sprout'):
-                    dest_freq_sheet.cell(row=write_row, column=26).value = row_obj['Sprout']['total']
-                    dest_freq_sheet.cell(row=write_row, column=27).value = row_obj['Sprout']['target']
+                if row_obj.has_key('Telemundo'):
+                    dest_freq_sheet.cell(row=write_row, column=26).value = row_obj['Telemundo']['total']
+                    dest_freq_sheet.cell(row=write_row, column=27).value = row_obj['Telemundo']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=26), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=27), '')
-                if row_obj.has_key('Telemundo'):
-                    dest_freq_sheet.cell(row=write_row, column=28).value = row_obj['Telemundo']['total']
-                    dest_freq_sheet.cell(row=write_row, column=29).value = row_obj['Telemundo']['target']
+                if row_obj.has_key('USA'):
+                    dest_freq_sheet.cell(row=write_row, column=28).value = row_obj['USA']['total']
+                    dest_freq_sheet.cell(row=write_row, column=29).value = row_obj['USA']['target']
                     format_cell(dest_freq_sheet.cell(row=write_row, column=28), '')
                     format_cell(dest_freq_sheet.cell(row=write_row, column=29), '')
             write_row += 1
@@ -923,21 +949,21 @@ def process_network_reach_tab(filename, equiv):
         dest_reach_net_sheet.cell(row=write_row, column=14).value = row_list['Oxygen'][
             'target_pct'] if row_list.has_key('Oxygen') else ''
         format_cell(dest_reach_net_sheet.cell(row=write_row, column=14), 'pct')
-        dest_reach_net_sheet.cell(row=write_row, column=15).value = row_list['Syfy']['target_pct'] if row_list.has_key(
-            'Syfy') else ''
-        format_cell(dest_reach_net_sheet.cell(row=write_row, column=15), 'pct')
-        dest_reach_net_sheet.cell(row=write_row, column=16).value = row_list['USA']['target_pct'] if row_list.has_key(
-            'USA') else ''
-        format_cell(dest_reach_net_sheet.cell(row=write_row, column=16), 'pct')
-        dest_reach_net_sheet.cell(row=write_row, column=17).value = row_list['Sprout']['target_pct'] if row_list.has_key(
+        dest_reach_net_sheet.cell(row=write_row, column=15).value = row_list['Sprout']['target_pct'] if row_list.has_key(
             'Sprout') else ''
-        format_cell(dest_reach_net_sheet.cell(row=write_row, column=17), 'pct')
-        dest_reach_net_sheet.cell(row=write_row, column=18).value = row_list['Telemundo']['target_pct'] if row_list.has_key(
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=15), 'pct')
+        dest_reach_net_sheet.cell(row=write_row, column=16).value = row_list['Syfy']['target_pct'] if row_list.has_key(
+            'Syfy') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=16), 'pct')
+        dest_reach_net_sheet.cell(row=write_row, column=17).value = row_list['Telemundo']['target_pct'] if row_list.has_key(
             'Telemundo') else ''
+        format_cell(dest_reach_net_sheet.cell(row=write_row, column=17), 'pct')
+        dest_reach_net_sheet.cell(row=write_row, column=18).value = row_list['USA']['target_pct'] if row_list.has_key(
+            'USA') else ''
         format_cell(dest_reach_net_sheet.cell(row=write_row, column=18), 'pct')
         write_row += 1
 
-    networks = ['Bravo','CNBC','Chiller','E!','Esquire','Golf Channel','MSNBC','NBC','NBCSN','Oxygen','Syfy','USA','Sprout','Telemundo']
+    networks = ['Bravo','CNBC','Chiller','E!','Esquire','Golf Channel','MSNBC','NBC','NBCSN','Oxygen','Sprout','Syfy','Telemundo','USA']
     
     for network in networks:
         if row_list.has_key(network):
@@ -1121,25 +1147,25 @@ def process_powerpoint_tab(filename, equiv):
                 row=8, column=3).value
             dest_pp_sheet.cell(row=55, column=3).value = source_sheet.cell(row=row_num, column=24).value
             dest_pp_sheet.cell(row=82, column=3).value = source_sheet.cell(row=row_num, column=16).value
-        if source_sheet.cell(row=row_num, column=1).value == 'Syfy':
+        if source_sheet.cell(row=row_num, column=1).value == 'Sprout':
             dest_pp_sheet.cell(row=28, column=3).value = source_sheet.cell(row=row_num,
                                                                            column=14).value / dest_pp_sheet.cell(
                 row=8, column=3).value
             dest_pp_sheet.cell(row=56, column=3).value = source_sheet.cell(row=row_num, column=24).value
             dest_pp_sheet.cell(row=83, column=3).value = source_sheet.cell(row=row_num, column=16).value
-        if source_sheet.cell(row=row_num, column=1).value == 'USA':
+        if source_sheet.cell(row=row_num, column=1).value == 'Syfy':
             dest_pp_sheet.cell(row=29, column=3).value = source_sheet.cell(row=row_num,
                                                                            column=14).value / dest_pp_sheet.cell(
                 row=8, column=3).value
             dest_pp_sheet.cell(row=57, column=3).value = source_sheet.cell(row=row_num, column=24).value
             dest_pp_sheet.cell(row=84, column=3).value = source_sheet.cell(row=row_num, column=16).value
-        if source_sheet.cell(row=row_num, column=1).value == 'Sprout':
+        if source_sheet.cell(row=row_num, column=1).value == 'Telemundo':
             dest_pp_sheet.cell(row=30, column=3).value = source_sheet.cell(row=row_num,
                                                                            column=14).value / dest_pp_sheet.cell(
                 row=8, column=3).value
             dest_pp_sheet.cell(row=58, column=3).value = source_sheet.cell(row=row_num, column=24).value
             dest_pp_sheet.cell(row=85, column=3).value = source_sheet.cell(row=row_num, column=16).value
-        if source_sheet.cell(row=row_num, column=1).value == 'Telemundo':
+        if source_sheet.cell(row=row_num, column=1).value == 'USA':
             dest_pp_sheet.cell(row=31, column=3).value = source_sheet.cell(row=row_num,
                                                                            column=14).value / dest_pp_sheet.cell(
                 row=8, column=3).value
@@ -1258,14 +1284,14 @@ def process_appendix_tab(filename, equiv):
                 'target_index': source_sheet.cell(row=row_num, column=29).value,
                 'target_reach': source_sheet.cell(row=row_num, column=19).value,
                 'target_frequency': source_sheet.cell(row=row_num, column=26).value,
-                'tCPM': source_sheet.cell(row=row_num, column=5).value * 1000 / source_sheet.cell(row=row_num, column=17).value}
+                'tCPM': source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num, column=17).value}
         else:
             net_obj[source_sheet.cell(row=row_num, column=1).value] = {
                 'target_impressions': source_sheet.cell(row=row_num, column=18).value,
                 'target_index': source_sheet.cell(row=row_num, column=30).value,
                 'target_reach': source_sheet.cell(row=row_num, column=19).value,
                 'target_frequency': source_sheet.cell(row=row_num, column=26).value,
-                'tCPM': source_sheet.cell(row=row_num, column=5).value * 1000 / source_sheet.cell(row=row_num, column=18).value}
+                'tCPM': source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num, column=18).value}
 
     # Morning
     mo_im_total = 0
@@ -1319,69 +1345,69 @@ def process_appendix_tab(filename, equiv):
         mo_im_total += day_net_obj['Morning']['Golf Channel']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         mo_re_total += day_net_obj['Morning']['Golf Channel']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Morning'].has_key('NBC'):
-        dest_pp_sheet['H16'] = day_net_obj['Morning']['NBC']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Morning'].has_key('MSNBC'):
+        dest_pp_sheet['H16'] = day_net_obj['Morning']['MSNBC']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['H39'] = day_net_obj['Morning']['NBC']['target_index']
-        dest_pp_sheet['H63'] = day_net_obj['Morning']['NBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['H39'] = day_net_obj['Morning']['MSNBC']['target_index']
+        dest_pp_sheet['H63'] = day_net_obj['Morning']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+        mo_im_total += day_net_obj['Morning']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+        mo_re_total += day_net_obj['Morning']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Morning'].has_key('NBC'):
+        dest_pp_sheet['I16'] = day_net_obj['Morning']['NBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['I39'] = day_net_obj['Morning']['NBC']['target_index']
+        dest_pp_sheet['I63'] = day_net_obj['Morning']['NBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['I88'] = day_net_obj['Morning']['NBC']['target_frequency']
         mo_im_total += day_net_obj['Morning']['NBC']['target_impressions'] / net_obj['Total']['target_impressions']
         mo_re_total += day_net_obj['Morning']['NBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Morning'].has_key('NBCSN'):
-        dest_pp_sheet['I16'] = day_net_obj['Morning']['NBCSN']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['J16'] = day_net_obj['Morning']['NBCSN']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['I39'] = day_net_obj['Morning']['NBCSN']['target_index']
-        dest_pp_sheet['I63'] = day_net_obj['Morning']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['I88'] = day_net_obj['Morning']['NBCSN']['target_frequency']
+        dest_pp_sheet['J39'] = day_net_obj['Morning']['NBCSN']['target_index']
+        dest_pp_sheet['J63'] = day_net_obj['Morning']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['J88'] = day_net_obj['Morning']['NBCSN']['target_frequency']
         mo_im_total += day_net_obj['Morning']['NBCSN']['target_impressions'] / net_obj['Total']['target_impressions']
         mo_re_total += day_net_obj['Morning']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Morning'].has_key('Oxygen'):
-        dest_pp_sheet['J16'] = day_net_obj['Morning']['Oxygen']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['K16'] = day_net_obj['Morning']['Oxygen']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['J39'] = day_net_obj['Morning']['Oxygen']['target_index']
-        dest_pp_sheet['J63'] = day_net_obj['Morning']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['J88'] = day_net_obj['Morning']['Oxygen']['target_frequency']
+        dest_pp_sheet['K39'] = day_net_obj['Morning']['Oxygen']['target_index']
+        dest_pp_sheet['K63'] = day_net_obj['Morning']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['K88'] = day_net_obj['Morning']['Oxygen']['target_frequency']
         mo_im_total += day_net_obj['Morning']['Oxygen']['target_impressions'] / net_obj['Total']['target_impressions']
         mo_re_total += day_net_obj['Morning']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Morning'].has_key('Syfy'):
-        dest_pp_sheet['K16'] = day_net_obj['Morning']['Syfy']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['K39'] = day_net_obj['Morning']['Syfy']['target_index']
-        dest_pp_sheet['K63'] = day_net_obj['Morning']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['K88'] = day_net_obj['Morning']['Syfy']['target_frequency']
-        mo_im_total += day_net_obj['Morning']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
-        mo_re_total += day_net_obj['Morning']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Morning'].has_key('USA'):
-        dest_pp_sheet['L16'] = day_net_obj['Morning']['USA']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['L39'] = day_net_obj['Morning']['USA']['target_index']
-        dest_pp_sheet['L63'] = day_net_obj['Morning']['USA']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['L88'] = day_net_obj['Morning']['USA']['target_frequency']
-        mo_im_total += day_net_obj['Morning']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
-        mo_re_total += day_net_obj['Morning']['USA']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Morning'].has_key('MSNBC'):
-        dest_pp_sheet['M16'] = day_net_obj['Morning']['MSNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['M39'] = day_net_obj['Morning']['MSNBC']['target_index']
-        dest_pp_sheet['M63'] = day_net_obj['Morning']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['M88'] = day_net_obj['Morning']['MSNBC']['target_frequency']
-        mo_im_total += day_net_obj['Morning']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-        mo_re_total += day_net_obj['Morning']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Morning'].has_key('Sprout'):
-        dest_pp_sheet['N16'] = day_net_obj['Morning']['Sprout']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['L16'] = day_net_obj['Morning']['Sprout']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['N39'] = day_net_obj['Morning']['Sprout']['target_index']
-        dest_pp_sheet['N63'] = day_net_obj['Morning']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['N88'] = day_net_obj['Morning']['Sprout']['target_frequency']
+        dest_pp_sheet['L39'] = day_net_obj['Morning']['Sprout']['target_index']
+        dest_pp_sheet['L63'] = day_net_obj['Morning']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['L88'] = day_net_obj['Morning']['Sprout']['target_frequency']
         mo_im_total += day_net_obj['Morning']['Sprout']['target_impressions'] / net_obj['Total']['target_impressions']
         mo_re_total += day_net_obj['Morning']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Morning'].has_key('Telemundo'):
-        dest_pp_sheet['O16'] = day_net_obj['Morning']['Telemundo']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Morning'].has_key('Syfy'):
+        dest_pp_sheet['M16'] = day_net_obj['Morning']['Syfy']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['O39'] = day_net_obj['Morning']['Telemundo']['target_index']
-        dest_pp_sheet['O63'] = day_net_obj['Morning']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['O88'] = day_net_obj['Morning']['Telemundo']['target_frequency']
+        dest_pp_sheet['M39'] = day_net_obj['Morning']['Syfy']['target_index']
+        dest_pp_sheet['M63'] = day_net_obj['Morning']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['M88'] = day_net_obj['Morning']['Syfy']['target_frequency']
+        mo_im_total += day_net_obj['Morning']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
+        mo_re_total += day_net_obj['Morning']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Morning'].has_key('Telemundo'):
+        dest_pp_sheet['N16'] = day_net_obj['Morning']['Telemundo']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['N39'] = day_net_obj['Morning']['Telemundo']['target_index']
+        dest_pp_sheet['N63'] = day_net_obj['Morning']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['N88'] = day_net_obj['Morning']['Telemundo']['target_frequency']
         mo_im_total += day_net_obj['Morning']['Telemundo']['target_impressions'] / net_obj['Total']['target_impressions']
         mo_re_total += day_net_obj['Morning']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Morning'].has_key('USA'):
+        dest_pp_sheet['O16'] = day_net_obj['Morning']['USA']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['O39'] = day_net_obj['Morning']['USA']['target_index']
+        dest_pp_sheet['O63'] = day_net_obj['Morning']['USA']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['O88'] = day_net_obj['Morning']['USA']['target_frequency']
+        mo_im_total += day_net_obj['Morning']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
+        mo_re_total += day_net_obj['Morning']['USA']['target_reach'] / net_obj['Total']['target_reach']
 
     # Daytime
     dy_im_total = 0
@@ -1435,70 +1461,70 @@ def process_appendix_tab(filename, equiv):
         dy_im_total += day_net_obj['Daytime']['Golf Channel']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         dy_re_total += day_net_obj['Daytime']['Golf Channel']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Daytime'].has_key('NBC'):
-        dest_pp_sheet['H17'] = day_net_obj['Daytime']['NBC']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Daytime'].has_key('MSNBC'):
+        dest_pp_sheet['H17'] = day_net_obj['Daytime']['MSNBC']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['H40'] = day_net_obj['Daytime']['NBC']['target_index']
-        dest_pp_sheet['H64'] = day_net_obj['Daytime']['NBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['H89'] = day_net_obj['Daytime']['NBC']['target_frequency']
+        dest_pp_sheet['H40'] = day_net_obj['Daytime']['MSNBC']['target_index']
+        dest_pp_sheet['H64'] = day_net_obj['Daytime']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['H89'] = day_net_obj['Daytime']['MSNBC']['target_frequency']
+        dy_im_total += day_net_obj['Daytime']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+        dy_re_total += day_net_obj['Daytime']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Daytime'].has_key('NBC'):
+        dest_pp_sheet['I17'] = day_net_obj['Daytime']['NBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['I40'] = day_net_obj['Daytime']['NBC']['target_index']
+        dest_pp_sheet['I64'] = day_net_obj['Daytime']['NBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['I89'] = day_net_obj['Daytime']['NBC']['target_frequency']
         dy_im_total += day_net_obj['Daytime']['NBC']['target_impressions'] / net_obj['Total']['target_impressions']
         dy_re_total += day_net_obj['Daytime']['NBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Daytime'].has_key('NBCSN'):
-        dest_pp_sheet['I17'] = day_net_obj['Daytime']['NBCSN']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['J17'] = day_net_obj['Daytime']['NBCSN']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['I40'] = day_net_obj['Daytime']['NBCSN']['target_index']
-        dest_pp_sheet['I64'] = day_net_obj['Daytime']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['I89'] = day_net_obj['Daytime']['NBCSN']['target_frequency']
+        dest_pp_sheet['J40'] = day_net_obj['Daytime']['NBCSN']['target_index']
+        dest_pp_sheet['J64'] = day_net_obj['Daytime']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['J89'] = day_net_obj['Daytime']['NBCSN']['target_frequency']
         dy_im_total += day_net_obj['Daytime']['NBCSN']['target_impressions'] / net_obj['Total']['target_impressions']
         dy_re_total += day_net_obj['Daytime']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Daytime'].has_key('Oxygen'):
-        dest_pp_sheet['J17'] = day_net_obj['Daytime']['Oxygen']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['K17'] = day_net_obj['Daytime']['Oxygen']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['J40'] = day_net_obj['Daytime']['Oxygen']['target_index']
-        dest_pp_sheet['J64'] = day_net_obj['Daytime']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['J89'] = day_net_obj['Daytime']['Oxygen']['target_frequency']
+        dest_pp_sheet['K40'] = day_net_obj['Daytime']['Oxygen']['target_index']
+        dest_pp_sheet['K64'] = day_net_obj['Daytime']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['K89'] = day_net_obj['Daytime']['Oxygen']['target_frequency']
         dy_im_total += day_net_obj['Daytime']['Oxygen']['target_impressions'] / net_obj['Total']['target_impressions']
         dy_re_total += day_net_obj['Daytime']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Daytime'].has_key('Syfy'):
-        dest_pp_sheet['K17'] = day_net_obj['Daytime']['Syfy']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['K40'] = day_net_obj['Daytime']['Syfy']['target_index']
-        dest_pp_sheet['K64'] = day_net_obj['Daytime']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['K89'] = day_net_obj['Daytime']['Syfy']['target_frequency']
-        dy_im_total += day_net_obj['Daytime']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
-        dy_re_total += day_net_obj['Daytime']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Daytime'].has_key('USA'):
-        dest_pp_sheet['L17'] = day_net_obj['Daytime']['USA']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['L40'] = day_net_obj['Daytime']['USA']['target_index']
-        dest_pp_sheet['L64'] = day_net_obj['Daytime']['USA']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['L89'] = day_net_obj['Daytime']['USA']['target_frequency']
-        dy_im_total += day_net_obj['Daytime']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
-        dy_re_total += day_net_obj['Daytime']['USA']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Daytime'].has_key('MSNBC'):
-        dest_pp_sheet['M17'] = day_net_obj['Daytime']['MSNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['M40'] = day_net_obj['Daytime']['MSNBC']['target_index']
-        dest_pp_sheet['M64'] = day_net_obj['Daytime']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['M89'] = day_net_obj['Daytime']['MSNBC']['target_frequency']
-        mo_im_total += day_net_obj['Daytime']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-        mo_re_total += day_net_obj['Daytime']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Daytime'].has_key('Sprout'):
-        dest_pp_sheet['N17'] = day_net_obj['Daytime']['Sprout']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['L17'] = day_net_obj['Daytime']['Sprout']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['N40'] = day_net_obj['Daytime']['Sprout']['target_index']
-        dest_pp_sheet['N64'] = day_net_obj['Daytime']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['N89'] = day_net_obj['Daytime']['Sprout']['target_frequency']
-        mo_im_total += day_net_obj['Daytime']['Sprout']['target_impressions'] / net_obj['Total']['target_impressions']
-        mo_re_total += day_net_obj['Daytime']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['L40'] = day_net_obj['Daytime']['Sprout']['target_index']
+        dest_pp_sheet['L64'] = day_net_obj['Daytime']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['L89'] = day_net_obj['Daytime']['Sprout']['target_frequency']
+        dy_im_total += day_net_obj['Daytime']['Sprout']['target_impressions'] / net_obj['Total']['target_impressions']
+        dy_re_total += day_net_obj['Daytime']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Daytime'].has_key('Syfy'):
+        dest_pp_sheet['M17'] = day_net_obj['Daytime']['Syfy']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['M40'] = day_net_obj['Daytime']['Syfy']['target_index']
+        dest_pp_sheet['M64'] = day_net_obj['Daytime']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['M89'] = day_net_obj['Daytime']['Syfy']['target_frequency']
+        mo_im_total += day_net_obj['Daytime']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
+        mo_re_total += day_net_obj['Daytime']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Daytime'].has_key('Telemundo'):
-        dest_pp_sheet['O17'] = day_net_obj['Daytime']['Telemundo']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['N17'] = day_net_obj['Daytime']['Telemundo']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['O40'] = day_net_obj['Daytime']['Telemundo']['target_index']
-        dest_pp_sheet['O64'] = day_net_obj['Daytime']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['O89'] = day_net_obj['Daytime']['Telemundo']['target_frequency']
+        dest_pp_sheet['N40'] = day_net_obj['Daytime']['Telemundo']['target_index']
+        dest_pp_sheet['N64'] = day_net_obj['Daytime']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['N89'] = day_net_obj['Daytime']['Telemundo']['target_frequency']
         mo_im_total += day_net_obj['Daytime']['Telemundo']['target_impressions'] / net_obj['Total']['target_impressions']
         mo_re_total += day_net_obj['Daytime']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Daytime'].has_key('USA'):
+        dest_pp_sheet['O17'] = day_net_obj['Daytime']['USA']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['O40'] = day_net_obj['Daytime']['USA']['target_index']
+        dest_pp_sheet['O64'] = day_net_obj['Daytime']['USA']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['O89'] = day_net_obj['Daytime']['USA']['target_frequency']
+        mo_im_total += day_net_obj['Daytime']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
+        mo_re_total += day_net_obj['Daytime']['USA']['target_reach'] / net_obj['Total']['target_reach']
 
     # Early Fringe
     fe_im_total = 0
@@ -1557,76 +1583,76 @@ def process_appendix_tab(filename, equiv):
         fe_im_total += day_net_obj['Early Fringe']['Golf Channel']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         fe_re_total += day_net_obj['Early Fringe']['Golf Channel']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Early Fringe'].has_key('NBC'):
-        dest_pp_sheet['H18'] = day_net_obj['Early Fringe']['NBC']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Early Fringe'].has_key('MSNBC'):
+        dest_pp_sheet['H18'] = day_net_obj['Early Fringe']['MSNBC']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['H41'] = day_net_obj['Early Fringe']['NBC']['target_index']
-        dest_pp_sheet['H65'] = day_net_obj['Early Fringe']['NBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['H90'] = day_net_obj['Early Fringe']['NBC']['target_frequency']
-        fe_im_total += day_net_obj['Early Fringe']['NBC']['target_impressions'] / net_obj['Total']['target_impressions']
+        dest_pp_sheet['H41'] = day_net_obj['Early Fringe']['MSNBC']['target_index']
+        dest_pp_sheet['H65'] = day_net_obj['Early Fringe']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['H90'] = day_net_obj['Early Fringe']['MSNBC']['target_frequency']
+        fe_im_total += day_net_obj['Early Fringe']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+        fe_re_total += day_net_obj['Early Fringe']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Early Fringe'].has_key('NBC'):
+        dest_pp_sheet['I18'] = day_net_obj['Early Fringe']['NBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['I41'] = day_net_obj['Early Fringe']['NBC']['target_index']
+        dest_pp_sheet['I65'] = day_net_obj['Early Fringe']['NBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['I90'] = day_net_obj['Early Fringe']['NBC']['target_frequency']
+        fe_im_total += day_net_obj['Early Fringe']['NBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
         fe_re_total += day_net_obj['Early Fringe']['NBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Early Fringe'].has_key('NBCSN'):
-        dest_pp_sheet['I18'] = day_net_obj['Early Fringe']['NBCSN']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['J18'] = day_net_obj['Early Fringe']['NBCSN']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['I41'] = day_net_obj['Early Fringe']['NBCSN']['target_index']
-        dest_pp_sheet['I65'] = day_net_obj['Early Fringe']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['I90'] = day_net_obj['Early Fringe']['NBCSN']['target_frequency']
+        dest_pp_sheet['J41'] = day_net_obj['Early Fringe']['NBCSN']['target_index']
+        dest_pp_sheet['J65'] = day_net_obj['Early Fringe']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['J90'] = day_net_obj['Early Fringe']['NBCSN']['target_frequency']
         fe_im_total += day_net_obj['Early Fringe']['NBCSN']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         fe_re_total += day_net_obj['Early Fringe']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Early Fringe'].has_key('Oxygen'):
-        dest_pp_sheet['J18'] = day_net_obj['Early Fringe']['Oxygen']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['K18'] = day_net_obj['Early Fringe']['Oxygen']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['J41'] = day_net_obj['Early Fringe']['Oxygen']['target_index']
-        dest_pp_sheet['J65'] = day_net_obj['Early Fringe']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['J90'] = day_net_obj['Early Fringe']['Oxygen']['target_frequency']
+        dest_pp_sheet['K41'] = day_net_obj['Early Fringe']['Oxygen']['target_index']
+        dest_pp_sheet['K65'] = day_net_obj['Early Fringe']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['K90'] = day_net_obj['Early Fringe']['Oxygen']['target_frequency']
         fe_im_total += day_net_obj['Early Fringe']['Oxygen']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         fe_re_total += day_net_obj['Early Fringe']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Early Fringe'].has_key('Syfy'):
-        dest_pp_sheet['K18'] = day_net_obj['Early Fringe']['Syfy']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Early Fringe'].has_key('Sprout'):
+        dest_pp_sheet['L18'] = day_net_obj['Early Fringe']['Sprout']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['K41'] = day_net_obj['Early Fringe']['Syfy']['target_index']
-        dest_pp_sheet['K65'] = day_net_obj['Early Fringe']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['K90'] = day_net_obj['Early Fringe']['Syfy']['target_frequency']
+        dest_pp_sheet['L41'] = day_net_obj['Early Fringe']['Sprout']['target_index']
+        dest_pp_sheet['L65'] = day_net_obj['Early Fringe']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['L90'] = day_net_obj['Early Fringe']['Sprout']['target_frequency']
+        fe_im_total += day_net_obj['Early Fringe']['Sprout']['target_impressions'] / net_obj['Total']['target_impressions']
+        fe_re_total += day_net_obj['Early Fringe']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Early Fringe'].has_key('Syfy'):
+        dest_pp_sheet['M18'] = day_net_obj['Early Fringe']['Syfy']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['M41'] = day_net_obj['Early Fringe']['Syfy']['target_index']
+        dest_pp_sheet['M65'] = day_net_obj['Early Fringe']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['M90'] = day_net_obj['Early Fringe']['Syfy']['target_frequency']
         fe_im_total += day_net_obj['Early Fringe']['Syfy']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         fe_re_total += day_net_obj['Early Fringe']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Early Fringe'].has_key('USA'):
-        dest_pp_sheet['L18'] = day_net_obj['Early Fringe']['USA']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['L41'] = day_net_obj['Early Fringe']['USA']['target_index']
-        dest_pp_sheet['L65'] = day_net_obj['Early Fringe']['USA']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['L90'] = day_net_obj['Early Fringe']['USA']['target_frequency']
-        fe_im_total += day_net_obj['Early Fringe']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
-        fe_re_total += day_net_obj['Early Fringe']['USA']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Early Fringe'].has_key('MSNBC'):
-        dest_pp_sheet['M18'] = day_net_obj['Early Fringe']['MSNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['M41'] = day_net_obj['Early Fringe']['MSNBC']['target_index']
-        dest_pp_sheet['M65'] = day_net_obj['Early Fringe']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['M90'] = day_net_obj['Early Fringe']['MSNBC']['target_frequency']
-        fe_im_total += day_net_obj['Early Fringe']['MSNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        fe_re_total += day_net_obj['Early Fringe']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Early Fringe'].has_key('Sprout'):
-        dest_pp_sheet['N18'] = day_net_obj['Early Fringe']['Sprout']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['N41'] = day_net_obj['Early Fringe']['Sprout']['target_index']
-        dest_pp_sheet['N65'] = day_net_obj['Early Fringe']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['N90'] = day_net_obj['Early Fringe']['Sprout']['target_frequency']
-        fe_im_total += day_net_obj['Early Fringe']['Sprout']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        fe_re_total += day_net_obj['Early Fringe']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Early Fringe'].has_key('Telemundo'):
-        dest_pp_sheet['O18'] = day_net_obj['Early Fringe']['Telemundo']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['N18'] = day_net_obj['Early Fringe']['Telemundo']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['O41'] = day_net_obj['Early Fringe']['Telemundo']['target_index']
-        dest_pp_sheet['O65'] = day_net_obj['Early Fringe']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['O90'] = day_net_obj['Early Fringe']['Telemundo']['target_frequency']
+        dest_pp_sheet['N41'] = day_net_obj['Early Fringe']['Telemundo']['target_index']
+        dest_pp_sheet['N65'] = day_net_obj['Early Fringe']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['N90'] = day_net_obj['Early Fringe']['Telemundo']['target_frequency']
         fe_im_total += day_net_obj['Early Fringe']['Telemundo']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         fe_re_total += day_net_obj['Early Fringe']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Early Fringe'].has_key('USA'):
+        dest_pp_sheet['O18'] = day_net_obj['Early Fringe']['USA']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['O41'] = day_net_obj['Early Fringe']['USA']['target_index']
+        dest_pp_sheet['O65'] = day_net_obj['Early Fringe']['USA']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['O90'] = day_net_obj['Early Fringe']['USA']['target_frequency']
+        fe_im_total += day_net_obj['Early Fringe']['USA']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        fe_re_total += day_net_obj['Early Fringe']['USA']['target_reach'] / net_obj['Total']['target_reach']
 
     # Prime
     pr_im_total = 0
@@ -1679,70 +1705,70 @@ def process_appendix_tab(filename, equiv):
         pr_im_total += day_net_obj['Prime']['Golf Channel']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         pr_re_total += day_net_obj['Prime']['Golf Channel']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Prime'].has_key('NBC'):
-        dest_pp_sheet['H19'] = day_net_obj['Prime']['NBC']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Prime'].has_key('MSNBC'):
+        dest_pp_sheet['H19'] = day_net_obj['Prime']['MSNBC']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['H42'] = day_net_obj['Prime']['NBC']['target_index']
-        dest_pp_sheet['H66'] = day_net_obj['Prime']['NBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['H91'] = day_net_obj['Prime']['NBC']['target_frequency']
+        dest_pp_sheet['H42'] = day_net_obj['Prime']['MSNBC']['target_index']
+        dest_pp_sheet['H66'] = day_net_obj['Prime']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['H91'] = day_net_obj['Prime']['MSNBC']['target_frequency']
+        pr_im_total += day_net_obj['Prime']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+        pr_re_total += day_net_obj['Prime']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Prime'].has_key('NBC'):
+        dest_pp_sheet['I19'] = day_net_obj['Prime']['NBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['I42'] = day_net_obj['Prime']['NBC']['target_index']
+        dest_pp_sheet['I66'] = day_net_obj['Prime']['NBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['I91'] = day_net_obj['Prime']['NBC']['target_frequency']
         pr_im_total += day_net_obj['Prime']['NBC']['target_impressions'] / net_obj['Total']['target_impressions']
         pr_re_total += day_net_obj['Prime']['NBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Prime'].has_key('NBCSN'):
-        dest_pp_sheet['I19'] = day_net_obj['Prime']['NBCSN']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['J19'] = day_net_obj['Prime']['NBCSN']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['I42'] = day_net_obj['Prime']['NBCSN']['target_index']
-        dest_pp_sheet['I66'] = day_net_obj['Prime']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['I91'] = day_net_obj['Prime']['NBCSN']['target_frequency']
+        dest_pp_sheet['J42'] = day_net_obj['Prime']['NBCSN']['target_index']
+        dest_pp_sheet['J66'] = day_net_obj['Prime']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['J91'] = day_net_obj['Prime']['NBCSN']['target_frequency']
         pr_im_total += day_net_obj['Prime']['NBCSN']['target_impressions'] / net_obj['Total']['target_impressions']
         pr_re_total += day_net_obj['Prime']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Prime'].has_key('Oxygen'):
-        dest_pp_sheet['J19'] = day_net_obj['Prime']['Oxygen']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['K19'] = day_net_obj['Prime']['Oxygen']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['J42'] = day_net_obj['Prime']['Oxygen']['target_index']
-        dest_pp_sheet['J66'] = day_net_obj['Prime']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['J91'] = day_net_obj['Prime']['Oxygen']['target_frequency']
+        dest_pp_sheet['K42'] = day_net_obj['Prime']['Oxygen']['target_index']
+        dest_pp_sheet['K66'] = day_net_obj['Prime']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['K91'] = day_net_obj['Prime']['Oxygen']['target_frequency']
         pr_im_total += day_net_obj['Prime']['Oxygen']['target_impressions'] / net_obj['Total']['target_impressions']
         pr_re_total += day_net_obj['Prime']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Prime'].has_key('Syfy'):
-        dest_pp_sheet['K19'] = day_net_obj['Prime']['Syfy']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['K42'] = day_net_obj['Prime']['Syfy']['target_index']
-        dest_pp_sheet['K66'] = day_net_obj['Prime']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['K91'] = day_net_obj['Prime']['Syfy']['target_frequency']
-        pr_im_total += day_net_obj['Prime']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
-        pr_re_total += day_net_obj['Prime']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Prime'].has_key('USA'):
-        dest_pp_sheet['L19'] = day_net_obj['Prime']['USA']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['L42'] = day_net_obj['Prime']['USA']['target_index']
-        dest_pp_sheet['L66'] = day_net_obj['Prime']['USA']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['L91'] = day_net_obj['Prime']['USA']['target_frequency']
-        pr_im_total += day_net_obj['Prime']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
-        pr_re_total += day_net_obj['Prime']['USA']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Prime'].has_key('MSNBC'):
-        dest_pp_sheet['M19'] = day_net_obj['Prime']['MSNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['M42'] = day_net_obj['Prime']['MSNBC']['target_index']
-        dest_pp_sheet['M66'] = day_net_obj['Prime']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['M91'] = day_net_obj['Prime']['MSNBC']['target_frequency']
-        pr_im_total += day_net_obj['Prime']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-        pr_re_total += day_net_obj['Prime']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Prime'].has_key('Sprout'):
-        dest_pp_sheet['N19'] = day_net_obj['Prime']['Sprout']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['L19'] = day_net_obj['Prime']['Sprout']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['N42'] = day_net_obj['Prime']['Sprout']['target_index']
-        dest_pp_sheet['N66'] = day_net_obj['Prime']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['N91'] = day_net_obj['Prime']['Sprout']['target_frequency']
+        dest_pp_sheet['L42'] = day_net_obj['Prime']['Sprout']['target_index']
+        dest_pp_sheet['L66'] = day_net_obj['Prime']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['L91'] = day_net_obj['Prime']['Sprout']['target_frequency']
         pr_im_total += day_net_obj['Prime']['Sprout']['target_impressions'] / net_obj['Total']['target_impressions']
         pr_re_total += day_net_obj['Prime']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Prime'].has_key('Telemundo'):
-        dest_pp_sheet['O19'] = day_net_obj['Prime']['Telemundo']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Prime'].has_key('Syfy'):
+        dest_pp_sheet['M19'] = day_net_obj['Prime']['Syfy']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['O42'] = day_net_obj['Prime']['Telemundo']['target_index']
-        dest_pp_sheet['O66'] = day_net_obj['Prime']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['O91'] = day_net_obj['Prime']['Telemundo']['target_frequency']
+        dest_pp_sheet['M42'] = day_net_obj['Prime']['Syfy']['target_index']
+        dest_pp_sheet['M66'] = day_net_obj['Prime']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['M91'] = day_net_obj['Prime']['Syfy']['target_frequency']
+        pr_im_total += day_net_obj['Prime']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
+        pr_re_total += day_net_obj['Prime']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Prime'].has_key('Telemundo'):
+        dest_pp_sheet['N19'] = day_net_obj['Prime']['Telemundo']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['N42'] = day_net_obj['Prime']['Telemundo']['target_index']
+        dest_pp_sheet['N66'] = day_net_obj['Prime']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['N91'] = day_net_obj['Prime']['Telemundo']['target_frequency']
         pr_im_total += day_net_obj['Prime']['Telemundo']['target_impressions'] / net_obj['Total']['target_impressions']
         pr_re_total += day_net_obj['Prime']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Prime'].has_key('USA'):
+        dest_pp_sheet['O19'] = day_net_obj['Prime']['USA']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['O42'] = day_net_obj['Prime']['USA']['target_index']
+        dest_pp_sheet['O66'] = day_net_obj['Prime']['USA']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['O91'] = day_net_obj['Prime']['USA']['target_frequency']
+        pr_im_total += day_net_obj['Prime']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
+        pr_re_total += day_net_obj['Prime']['USA']['target_reach'] / net_obj['Total']['target_reach']
 
     # Late Night
     ln_im_total = 0
@@ -1799,71 +1825,71 @@ def process_appendix_tab(filename, equiv):
         ln_im_total += day_net_obj['Late Night']['Golf Channel']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         ln_re_total += day_net_obj['Late Night']['Golf Channel']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Late Night'].has_key('NBC'):
-        dest_pp_sheet['H20'] = day_net_obj['Late Night']['NBC']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Late Night'].has_key('MSNBC'):
+        dest_pp_sheet['H20'] = day_net_obj['Late Night']['MSNBC']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['H43'] = day_net_obj['Late Night']['NBC']['target_index']
-        dest_pp_sheet['H67'] = day_net_obj['Late Night']['NBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['H92'] = day_net_obj['Late Night']['NBC']['target_frequency']
+        dest_pp_sheet['H43'] = day_net_obj['Late Night']['MSNBC']['target_index']
+        dest_pp_sheet['H67'] = day_net_obj['Late Night']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['H92'] = day_net_obj['Late Night']['MSNBC']['target_frequency']
+        ln_im_total += day_net_obj['Late Night']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+        ln_re_total += day_net_obj['Late Night']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Late Night'].has_key('NBC'):
+        dest_pp_sheet['I20'] = day_net_obj['Late Night']['NBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['I43'] = day_net_obj['Late Night']['NBC']['target_index']
+        dest_pp_sheet['I67'] = day_net_obj['Late Night']['NBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['I92'] = day_net_obj['Late Night']['NBC']['target_frequency']
         ln_im_total += day_net_obj['Late Night']['NBC']['target_impressions'] / net_obj['Total']['target_impressions']
         ln_re_total += day_net_obj['Late Night']['NBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Late Night'].has_key('NBCSN'):
-        dest_pp_sheet['I20'] = day_net_obj['Late Night']['NBCSN']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['J20'] = day_net_obj['Late Night']['NBCSN']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['I43'] = day_net_obj['Late Night']['NBCSN']['target_index']
-        dest_pp_sheet['I67'] = day_net_obj['Late Night']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['I92'] = day_net_obj['Late Night']['NBCSN']['target_frequency']
-        ln_im_total += day_net_obj['Late Night']['NBCSN']['target_impressions'] / net_obj['Total']['target_impressions']
+        dest_pp_sheet['J43'] = day_net_obj['Late Night']['NBCSN']['target_index']
+        dest_pp_sheet['J67'] = day_net_obj['Late Night']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['J92'] = day_net_obj['Late Night']['NBCSN']['target_frequency']
+        ln_im_total += day_net_obj['Late Night']['NBCSN']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
         ln_re_total += day_net_obj['Late Night']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Late Night'].has_key('Oxygen'):
-        dest_pp_sheet['J20'] = day_net_obj['Late Night']['Oxygen']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['K20'] = day_net_obj['Late Night']['Oxygen']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['J43'] = day_net_obj['Late Night']['Oxygen']['target_index']
-        dest_pp_sheet['J67'] = day_net_obj['Late Night']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['J92'] = day_net_obj['Late Night']['Oxygen']['target_frequency']
-        ln_im_total += day_net_obj['Late Night']['Oxygen']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
+        dest_pp_sheet['K43'] = day_net_obj['Late Night']['Oxygen']['target_index']
+        dest_pp_sheet['K67'] = day_net_obj['Late Night']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['K92'] = day_net_obj['Late Night']['Oxygen']['target_frequency']
+        ln_im_total += day_net_obj['Late Night']['Oxygen']['target_impressions'] / net_obj['Total']['target_impressions']
         ln_re_total += day_net_obj['Late Night']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Late Night'].has_key('Syfy'):
-        dest_pp_sheet['K20'] = day_net_obj['Late Night']['Syfy']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['K43'] = day_net_obj['Late Night']['Syfy']['target_index']
-        dest_pp_sheet['K67'] = day_net_obj['Late Night']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['K92'] = day_net_obj['Late Night']['Syfy']['target_frequency']
-        ln_im_total += day_net_obj['Late Night']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
-        ln_re_total += day_net_obj['Late Night']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Late Night'].has_key('USA'):
-        dest_pp_sheet['L20'] = day_net_obj['Late Night']['USA']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['L43'] = day_net_obj['Late Night']['USA']['target_index']
-        dest_pp_sheet['L67'] = day_net_obj['Late Night']['USA']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['L92'] = day_net_obj['Late Night']['USA']['target_frequency']
-        ln_im_total += day_net_obj['Late Night']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
-        ln_re_total += day_net_obj['Late Night']['USA']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Late Night'].has_key('MSNBC'):
-        dest_pp_sheet['M20'] = day_net_obj['Late Night']['MSNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['M43'] = day_net_obj['Late Night']['MSNBC']['target_index']
-        dest_pp_sheet['M67'] = day_net_obj['Late Night']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['M92'] = day_net_obj['Late Night']['MSNBC']['target_frequency']
-        ln_im_total += day_net_obj['Late Night']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-        ln_re_total += day_net_obj['Late Night']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj['Late Night'].has_key('Sprout'):
-        dest_pp_sheet['N20'] = day_net_obj['Late Night']['Sprout']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['L20'] = day_net_obj['Late Night']['Sprout']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['N43'] = day_net_obj['Late Night']['Sprout']['target_index']
-        dest_pp_sheet['N67'] = day_net_obj['Late Night']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['N92'] = day_net_obj['Late Night']['Sprout']['target_frequency']
+        dest_pp_sheet['L43'] = day_net_obj['Late Night']['Sprout']['target_index']
+        dest_pp_sheet['L67'] = day_net_obj['Late Night']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['L92'] = day_net_obj['Late Night']['Sprout']['target_frequency']
         ln_im_total += day_net_obj['Late Night']['Sprout']['target_impressions'] / net_obj['Total']['target_impressions']
         ln_re_total += day_net_obj['Late Night']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj['Late Night'].has_key('Telemundo'):
-        dest_pp_sheet['O20'] = day_net_obj['Late Night']['Telemundo']['target_impressions'] / net_obj['Total'][
+    if day_net_obj['Late Night'].has_key('Syfy'):
+        dest_pp_sheet['M20'] = day_net_obj['Late Night']['Syfy']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['O43'] = day_net_obj['Late Night']['Telemundo']['target_index']
-        dest_pp_sheet['O67'] = day_net_obj['Late Night']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['O92'] = day_net_obj['Late Night']['Telemundo']['target_frequency']
+        dest_pp_sheet['M43'] = day_net_obj['Late Night']['Syfy']['target_index']
+        dest_pp_sheet['M67'] = day_net_obj['Late Night']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['M92'] = day_net_obj['Late Night']['Syfy']['target_frequency']
+        ln_im_total += day_net_obj['Late Night']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
+        ln_re_total += day_net_obj['Late Night']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Late Night'].has_key('Telemundo'):
+        dest_pp_sheet['N20'] = day_net_obj['Late Night']['Telemundo']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['N43'] = day_net_obj['Late Night']['Telemundo']['target_index']
+        dest_pp_sheet['N67'] = day_net_obj['Late Night']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['N92'] = day_net_obj['Late Night']['Telemundo']['target_frequency']
         ln_im_total += day_net_obj['Late Night']['Telemundo']['target_impressions'] / net_obj['Total']['target_impressions']
         ln_re_total += day_net_obj['Late Night']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj['Late Night'].has_key('USA'):
+        dest_pp_sheet['O20'] = day_net_obj['Late Night']['USA']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['O43'] = day_net_obj['Late Night']['USA']['target_index']
+        dest_pp_sheet['O67'] = day_net_obj['Late Night']['USA']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['O92'] = day_net_obj['Late Night']['USA']['target_frequency']
+        ln_im_total += day_net_obj['Late Night']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
+        ln_re_total += day_net_obj['Late Night']['USA']['target_reach'] / net_obj['Total']['target_reach']
 
     # Overnight
     on_im_total = 0
@@ -1920,70 +1946,70 @@ def process_appendix_tab(filename, equiv):
         on_im_total += day_net_obj['Overnight']['Golf Channel']['target_impressions'] / net_obj['Total'][
             'target_impressions']
         on_re_total += day_net_obj['Overnight']['Golf Channel']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('NBC'):
-        dest_pp_sheet['H21'] = day_net_obj['Overnight']['NBC']['target_impressions'] / net_obj['Total'][
+    if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('MSNBC'):
+        dest_pp_sheet['H21'] = day_net_obj['Overnight']['MSNBC']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['H44'] = day_net_obj['Overnight']['NBC']['target_index']
-        dest_pp_sheet['H68'] = day_net_obj['Overnight']['NBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['H93'] = day_net_obj['Overnight']['NBC']['target_frequency']
+        dest_pp_sheet['H44'] = day_net_obj['Overnight']['MSNBC']['target_index']
+        dest_pp_sheet['H68'] = day_net_obj['Overnight']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['H93'] = day_net_obj['Overnight']['MSNBC']['target_frequency']
+        on_im_total += day_net_obj['Overnight']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+        on_re_total += day_net_obj['Overnight']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('NBC'):
+        dest_pp_sheet['I21'] = day_net_obj['Overnight']['NBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['I44'] = day_net_obj['Overnight']['NBC']['target_index']
+        dest_pp_sheet['I68'] = day_net_obj['Overnight']['NBC']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['I93'] = day_net_obj['Overnight']['NBC']['target_frequency']
         on_im_total += day_net_obj['Overnight']['NBC']['target_impressions'] / net_obj['Total']['target_impressions']
         on_re_total += day_net_obj['Overnight']['NBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('NBCSN'):
-        dest_pp_sheet['I21'] = day_net_obj['Overnight']['NBCSN']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['J21'] = day_net_obj['Overnight']['NBCSN']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['I44'] = day_net_obj['Overnight']['NBCSN']['target_index']
-        dest_pp_sheet['I68'] = day_net_obj['Overnight']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['I93'] = day_net_obj['Overnight']['NBCSN']['target_frequency']
+        dest_pp_sheet['J44'] = day_net_obj['Overnight']['NBCSN']['target_index']
+        dest_pp_sheet['J68'] = day_net_obj['Overnight']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['J93'] = day_net_obj['Overnight']['NBCSN']['target_frequency']
         on_im_total += day_net_obj['Overnight']['NBCSN']['target_impressions'] / net_obj['Total']['target_impressions']
         on_re_total += day_net_obj['Overnight']['NBCSN']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Oxygen'):
-        dest_pp_sheet['J21'] = day_net_obj['Overnight']['Oxygen']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['K21'] = day_net_obj['Overnight']['Oxygen']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['J44'] = day_net_obj['Overnight']['Oxygen']['target_index']
-        dest_pp_sheet['J68'] = day_net_obj['Overnight']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['J93'] = day_net_obj['Overnight']['Oxygen']['target_frequency']
+        dest_pp_sheet['K44'] = day_net_obj['Overnight']['Oxygen']['target_index']
+        dest_pp_sheet['K68'] = day_net_obj['Overnight']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['K93'] = day_net_obj['Overnight']['Oxygen']['target_frequency']
         on_im_total += day_net_obj['Overnight']['Oxygen']['target_impressions'] / net_obj['Total']['target_impressions']
         on_re_total += day_net_obj['Overnight']['Oxygen']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Syfy'):
-        dest_pp_sheet['K21'] = day_net_obj['Overnight']['Syfy']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['K44'] = day_net_obj['Overnight']['Syfy']['target_index']
-        dest_pp_sheet['K68'] = day_net_obj['Overnight']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['K93'] = day_net_obj['Overnight']['Syfy']['target_frequency']
-        on_im_total += day_net_obj['Overnight']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
-        on_re_total += day_net_obj['Overnight']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('USA'):
-        dest_pp_sheet['L21'] = day_net_obj['Overnight']['USA']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['L44'] = day_net_obj['Overnight']['USA']['target_index']
-        dest_pp_sheet['L68'] = day_net_obj['Overnight']['USA']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['L93'] = day_net_obj['Overnight']['USA']['target_frequency']
-        on_im_total += day_net_obj['Overnight']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
-        on_re_total += day_net_obj['Overnight']['USA']['target_reach'] / net_obj['Total']['target_reach']
-    if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('MSNBC'):
-        dest_pp_sheet['M21'] = day_net_obj['Overnight']['MSNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions']
-        dest_pp_sheet['M44'] = day_net_obj['Overnight']['MSNBC']['target_index']
-        dest_pp_sheet['M68'] = day_net_obj['Overnight']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['M93'] = day_net_obj['Overnight']['MSNBC']['target_frequency']
-        on_im_total += day_net_obj['Overnight']['MSNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-        on_re_total += day_net_obj['Overnight']['MSNBC']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Sprout'):
-        dest_pp_sheet['N21'] = day_net_obj['Overnight']['Sprout']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['L21'] = day_net_obj['Overnight']['Sprout']['target_impressions'] / net_obj['Total'][
             'target_impressions']
-        dest_pp_sheet['N44'] = day_net_obj['Overnight']['Sprout']['target_index']
-        dest_pp_sheet['N68'] = day_net_obj['Overnight']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['N93'] = day_net_obj['Overnight']['Sprout']['target_frequency']
+        dest_pp_sheet['L44'] = day_net_obj['Overnight']['Sprout']['target_index']
+        dest_pp_sheet['L68'] = day_net_obj['Overnight']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['L93'] = day_net_obj['Overnight']['Sprout']['target_frequency']
         on_im_total += day_net_obj['Overnight']['Sprout']['target_impressions'] / net_obj['Total']['target_impressions']
         on_re_total += day_net_obj['Overnight']['Sprout']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Syfy'):
+        dest_pp_sheet['M21'] = day_net_obj['Overnight']['Syfy']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['M44'] = day_net_obj['Overnight']['Syfy']['target_index']
+        dest_pp_sheet['M68'] = day_net_obj['Overnight']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['M93'] = day_net_obj['Overnight']['Syfy']['target_frequency']
+        on_im_total += day_net_obj['Overnight']['Syfy']['target_impressions'] / net_obj['Total']['target_impressions']
+        on_re_total += day_net_obj['Overnight']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
     if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Telemundo'):
-        dest_pp_sheet['O21'] = day_net_obj['Overnight']['Telemundo']['target_impressions'] / net_obj['Total'][
-            'target_impOessions']
-        dest_pp_sheet['O44'] = day_net_obj['Overnight']['Telemundo']['target_index']
-        dest_pp_sheet['O68'] = day_net_obj['Overnight']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
-        dest_pp_sheet['O93'] = day_net_obj['Overnight']['Telemundo']['target_frequency']
+        dest_pp_sheet['N21'] = day_net_obj['Overnight']['Telemundo']['target_impressions'] / net_obj['Total'][
+            'target_impressions']
+        dest_pp_sheet['N44'] = day_net_obj['Overnight']['Telemundo']['target_index']
+        dest_pp_sheet['N68'] = day_net_obj['Overnight']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['N93'] = day_net_obj['Overnight']['Telemundo']['target_frequency']
         on_im_total += day_net_obj['Overnight']['Telemundo']['target_impressions'] / net_obj['Total']['target_impressions']
         on_re_total += day_net_obj['Overnight']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
+    if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('USA'):
+        dest_pp_sheet['O21'] = day_net_obj['Overnight']['USA']['target_impressions'] / net_obj['Total'][
+            'target_impOessions']
+        dest_pp_sheet['O44'] = day_net_obj['Overnight']['USA']['target_index']
+        dest_pp_sheet['O68'] = day_net_obj['Overnight']['USA']['target_reach'] / net_obj['Total']['target_reach']
+        dest_pp_sheet['O93'] = day_net_obj['Overnight']['USA']['target_frequency']
+        on_im_total += day_net_obj['Overnight']['USA']['target_impressions'] / net_obj['Total']['target_impressions']
+        on_re_total += day_net_obj['Overnight']['USA']['target_reach'] / net_obj['Total']['target_reach']
 
     dest_pp_sheet['P16'] = mo_im_total
     dest_pp_sheet['P17'] = dy_im_total
@@ -2038,22 +2064,22 @@ def process_appendix_tab(filename, equiv):
         'target_impressions'] if net_obj.has_key('Esquire') else ''
     dest_pp_sheet['G22'] = net_obj['Golf Channel']['target_impressions'] / net_obj['Total'][
         'target_impressions'] if net_obj.has_key('Golf Channel') else ''
-    dest_pp_sheet['H22'] = net_obj['NBC']['target_impressions'] / net_obj['Total'][
-        'target_impressions'] if net_obj.has_key('NBC') else ''
-    dest_pp_sheet['I22'] = net_obj['NBCSN']['target_impressions'] / net_obj['Total'][
-        'target_impressions'] if net_obj.has_key('NBCSN') else ''
-    dest_pp_sheet['J22'] = net_obj['Oxygen']['target_impressions'] / net_obj['Total'][
-        'target_impressions'] if net_obj.has_key('Oxygen') else ''
-    dest_pp_sheet['K22'] = net_obj['Syfy']['target_impressions'] / net_obj['Total'][
-        'target_impressions'] if net_obj.has_key('Syfy') else ''
-    dest_pp_sheet['L22'] = net_obj['USA']['target_impressions'] / net_obj['Total'][
-        'target_impressions'] if net_obj.has_key('USA') else ''
-    dest_pp_sheet['M22'] = net_obj['MSNBC']['target_impressions'] / net_obj['Total'][
+    dest_pp_sheet['H22'] = net_obj['MSNBC']['target_impressions'] / net_obj['Total'][
         'target_impressions'] if net_obj.has_key('MSNBC') else ''
-    dest_pp_sheet['N22'] = net_obj['Sprout']['target_impressions'] / net_obj['Total'][
+    dest_pp_sheet['I22'] = net_obj['NBC']['target_impressions'] / net_obj['Total'][
+        'target_impressions'] if net_obj.has_key('NBC') else ''
+    dest_pp_sheet['J22'] = net_obj['NBCSN']['target_impressions'] / net_obj['Total'][
+        'target_impressions'] if net_obj.has_key('NBCSN') else ''
+    dest_pp_sheet['K22'] = net_obj['Oxygen']['target_impressions'] / net_obj['Total'][
+        'target_impressions'] if net_obj.has_key('Oxygen') else ''
+    dest_pp_sheet['L22'] = net_obj['Sprout']['target_impressions'] / net_obj['Total'][
         'target_impressions'] if net_obj.has_key('Sprout') else ''
-    dest_pp_sheet['O22'] = net_obj['Telemundo']['target_impressions'] / net_obj['Total'][
+    dest_pp_sheet['M22'] = net_obj['Syfy']['target_impressions'] / net_obj['Total'][
+        'target_impressions'] if net_obj.has_key('Syfy') else ''
+    dest_pp_sheet['N22'] = net_obj['Telemundo']['target_impressions'] / net_obj['Total'][
         'target_impressions'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['O22'] = net_obj['USA']['target_impressions'] / net_obj['Total'][
+        'target_impressions'] if net_obj.has_key('USA') else ''
     dest_pp_sheet['P22'] = net_obj['Total']['target_impressions'] / net_obj['Total']['target_impressions']
 
     dest_pp_sheet['B45'] = net_obj['Bravo']['target_index'] if net_obj.has_key('Bravo') else ''
@@ -2062,14 +2088,14 @@ def process_appendix_tab(filename, equiv):
     dest_pp_sheet['E45'] = net_obj['E!']['target_index'] if net_obj.has_key('E!') else ''
     dest_pp_sheet['F45'] = net_obj['Esquire']['target_index'] if net_obj.has_key('Esquire') else ''
     dest_pp_sheet['G45'] = net_obj['Golf Channel']['target_index'] if net_obj.has_key('Golf Channel') else ''
-    dest_pp_sheet['H45'] = net_obj['NBC']['target_index'] if net_obj.has_key('NBC') else ''
-    dest_pp_sheet['I45'] = net_obj['NBCSN']['target_index'] if net_obj.has_key('NBCSN') else ''
-    dest_pp_sheet['J45'] = net_obj['Oxygen']['target_index'] if net_obj.has_key('Oxygen') else ''
-    dest_pp_sheet['K45'] = net_obj['Syfy']['target_index'] if net_obj.has_key('Syfy') else ''
-    dest_pp_sheet['L45'] = net_obj['USA']['target_index'] if net_obj.has_key('USA') else ''
-    dest_pp_sheet['M45'] = net_obj['MSNBC']['target_index'] if net_obj.has_key('MSNBC') else ''
-    dest_pp_sheet['N45'] = net_obj['Sprout']['target_index'] if net_obj.has_key('Sprout') else ''
-    dest_pp_sheet['O45'] = net_obj['Telemundo']['target_index'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['H45'] = net_obj['MSNBC']['target_index'] if net_obj.has_key('MSNBC') else ''
+    dest_pp_sheet['I45'] = net_obj['NBC']['target_index'] if net_obj.has_key('NBC') else ''
+    dest_pp_sheet['J45'] = net_obj['NBCSN']['target_index'] if net_obj.has_key('NBCSN') else ''
+    dest_pp_sheet['K45'] = net_obj['Oxygen']['target_index'] if net_obj.has_key('Oxygen') else ''
+    dest_pp_sheet['L45'] = net_obj['Sprout']['target_index'] if net_obj.has_key('Sprout') else ''
+    dest_pp_sheet['M45'] = net_obj['Syfy']['target_index'] if net_obj.has_key('Syfy') else ''
+    dest_pp_sheet['N45'] = net_obj['Telemundo']['target_index'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['O45'] = net_obj['USA']['target_index'] if net_obj.has_key('USA') else ''
     dest_pp_sheet['P45'] = net_obj['Total']['target_index']
 
     dest_pp_sheet['B69'] = net_obj['Bravo']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
@@ -2084,22 +2110,22 @@ def process_appendix_tab(filename, equiv):
         'Esquire') else ''
     dest_pp_sheet['G69'] = net_obj['Golf Channel']['target_reach'] / net_obj['Total'][
         'target_reach'] if net_obj.has_key('Golf Channel') else ''
-    dest_pp_sheet['H69'] = net_obj['NBC']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
-        'NBC') else ''
-    dest_pp_sheet['I69'] = net_obj['NBCSN']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
-        'NBCSN') else ''
-    dest_pp_sheet['J69'] = net_obj['Oxygen']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
-        'Oxygen') else ''
-    dest_pp_sheet['K69'] = net_obj['Syfy']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
-        'Syfy') else ''
-    dest_pp_sheet['L69'] = net_obj['USA']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
-        'USA') else ''
-    dest_pp_sheet['M69'] = net_obj['MSNBC']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+    dest_pp_sheet['H69'] = net_obj['MSNBC']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
         'MSNBC') else ''
-    dest_pp_sheet['N69'] = net_obj['Sprout']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+    dest_pp_sheet['I69'] = net_obj['NBC']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+        'NBC') else ''
+    dest_pp_sheet['J69'] = net_obj['NBCSN']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+        'NBCSN') else ''
+    dest_pp_sheet['K69'] = net_obj['Oxygen']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+        'Oxygen') else ''
+    dest_pp_sheet['L69'] = net_obj['Sprout']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
         'Sprout') else ''
-    dest_pp_sheet['O69'] = net_obj['Telemundo']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+    dest_pp_sheet['M69'] = net_obj['Syfy']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+        'Syfy') else ''
+    dest_pp_sheet['N69'] = net_obj['Telemundo']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
         'Telemundo') else ''
+    dest_pp_sheet['O69'] = net_obj['USA']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+        'USA') else ''
     dest_pp_sheet['P69'] = net_obj['Total']['target_reach'] / net_obj['Total']['target_reach']
 
     dest_pp_sheet['B94'] = net_obj['Bravo']['target_frequency'] if net_obj.has_key('Bravo') else ''
@@ -2108,14 +2134,14 @@ def process_appendix_tab(filename, equiv):
     dest_pp_sheet['E94'] = net_obj['E!']['target_frequency'] if net_obj.has_key('E!') else ''
     dest_pp_sheet['F94'] = net_obj['Esquire']['target_frequency'] if net_obj.has_key('Esquire') else ''
     dest_pp_sheet['G94'] = net_obj['Golf Channel']['target_frequency'] if net_obj.has_key('Golf Channel') else ''
-    dest_pp_sheet['H94'] = net_obj['NBC']['target_frequency'] if net_obj.has_key('NBC') else ''
-    dest_pp_sheet['I94'] = net_obj['NBCSN']['target_frequency'] if net_obj.has_key('NBCSN') else ''
-    dest_pp_sheet['J94'] = net_obj['Oxygen']['target_frequency'] if net_obj.has_key('Oxygen') else ''
-    dest_pp_sheet['K94'] = net_obj['Syfy']['target_frequency'] if net_obj.has_key('Syfy') else ''
-    dest_pp_sheet['L94'] = net_obj['USA']['target_frequency'] if net_obj.has_key('USA') else ''
-    dest_pp_sheet['M94'] = net_obj['MSNBC']['target_frequency'] if net_obj.has_key('MSNBC') else ''
-    dest_pp_sheet['N94'] = net_obj['Sprout']['target_frequency'] if net_obj.has_key('Sprout') else ''
+    dest_pp_sheet['H94'] = net_obj['MSNBC']['target_frequency'] if net_obj.has_key('MSNBC') else ''
+    dest_pp_sheet['I94'] = net_obj['NBC']['target_frequency'] if net_obj.has_key('NBC') else ''
+    dest_pp_sheet['J94'] = net_obj['NBCSN']['target_frequency'] if net_obj.has_key('NBCSN') else ''
+    dest_pp_sheet['K94'] = net_obj['Oxygen']['target_frequency'] if net_obj.has_key('Oxygen') else ''
+    dest_pp_sheet['L94'] = net_obj['Sprout']['target_frequency'] if net_obj.has_key('Sprout') else ''
+    dest_pp_sheet['M94'] = net_obj['Syfy']['target_frequency'] if net_obj.has_key('Syfy') else ''
     dest_pp_sheet['N94'] = net_obj['Telemundo']['target_frequency'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['N94'] = net_obj['USA']['target_frequency'] if net_obj.has_key('USA') else ''
     dest_pp_sheet['O94'] = net_obj['Total']['target_frequency']
 
     dest_pp_sheet['C100'] = net_obj['Bravo']['target_frequency'] if net_obj.has_key('Bravo') else ''
@@ -2124,14 +2150,14 @@ def process_appendix_tab(filename, equiv):
     dest_pp_sheet['C103'] = net_obj['E!']['target_frequency'] if net_obj.has_key('E!') else ''
     dest_pp_sheet['C104'] = net_obj['Esquire']['target_frequency'] if net_obj.has_key('Esquire') else ''
     dest_pp_sheet['C105'] = net_obj['Golf Channel']['target_frequency'] if net_obj.has_key('Golf Channel') else ''
-    dest_pp_sheet['C106'] = net_obj['NBC']['target_frequency'] if net_obj.has_key('NBC') else ''
-    dest_pp_sheet['C107'] = net_obj['NBCSN']['target_frequency'] if net_obj.has_key('NBCSN') else ''
-    dest_pp_sheet['C108'] = net_obj['Oxygen']['target_frequency'] if net_obj.has_key('Oxygen') else ''
-    dest_pp_sheet['C109'] = net_obj['Syfy']['target_frequency'] if net_obj.has_key('Syfy') else ''
-    dest_pp_sheet['C110'] = net_obj['USA']['target_frequency'] if net_obj.has_key('USA') else ''
-    dest_pp_sheet['C111'] = net_obj['MSNBC']['target_frequency'] if net_obj.has_key('MSNBC') else ''
-    dest_pp_sheet['C112'] = net_obj['Sprout']['target_frequency'] if net_obj.has_key('Sprout') else ''
-    dest_pp_sheet['C113'] = net_obj['Telemundo']['target_frequency'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['C106'] = net_obj['MSNBC']['target_frequency'] if net_obj.has_key('MSNBC') else ''
+    dest_pp_sheet['C107'] = net_obj['NBC']['target_frequency'] if net_obj.has_key('NBC') else ''
+    dest_pp_sheet['C108'] = net_obj['NBCSN']['target_frequency'] if net_obj.has_key('NBCSN') else ''
+    dest_pp_sheet['C109'] = net_obj['Oxygen']['target_frequency'] if net_obj.has_key('Oxygen') else ''
+    dest_pp_sheet['C110'] = net_obj['Sprout']['target_frequency'] if net_obj.has_key('Sprout') else ''
+    dest_pp_sheet['C111'] = net_obj['Syfy']['target_frequency'] if net_obj.has_key('Syfy') else ''
+    dest_pp_sheet['C112'] = net_obj['Telemundo']['target_frequency'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['C113'] = net_obj['USA']['target_frequency'] if net_obj.has_key('USA') else ''
     dest_pp_sheet['C99'] = net_obj['Total']['target_frequency']
 
     dest_pp_sheet['C117'] = day_net_obj['Morning']['NBC']['target_frequency'] if day_net_obj['Morning'].has_key(
@@ -2166,27 +2192,27 @@ def process_appendix_tab(filename, equiv):
     dest_pp_sheet['A131'] = net_obj['Golf Channel']['tCPM'] if net_obj.has_key('Golf Channel') else ''
     dest_pp_sheet['B131'] = net_obj['Golf Channel']['target_reach'] if net_obj.has_key('Golf Channel') else ''
     dest_pp_sheet['C131'] = net_obj['Golf Channel']['target_frequency'] if net_obj.has_key('Golf Channel') else ''
-    dest_pp_sheet['A132'] = net_obj['NBCSN']['tCPM'] if net_obj.has_key('NBCSN') else ''
-    dest_pp_sheet['B132'] = net_obj['NBCSN']['target_reach'] if net_obj.has_key('NBCSN') else ''
-    dest_pp_sheet['C132'] = net_obj['NBCSN']['target_frequency'] if net_obj.has_key('NBCSN') else ''
-    dest_pp_sheet['A133'] = net_obj['Oxygen']['tCPM'] if net_obj.has_key('Oxygen') else ''
-    dest_pp_sheet['B133'] = net_obj['Oxygen']['target_reach'] if net_obj.has_key('Oxygen') else ''
-    dest_pp_sheet['C133'] = net_obj['Oxygen']['target_frequency'] if net_obj.has_key('Oxygen') else ''
-    dest_pp_sheet['A134'] = net_obj['Syfy']['tCPM'] if net_obj.has_key('Syfy') else ''
-    dest_pp_sheet['B134'] = net_obj['Syfy']['target_reach'] if net_obj.has_key('Syfy') else ''
-    dest_pp_sheet['C134'] = net_obj['Syfy']['target_frequency'] if net_obj.has_key('Syfy') else ''
-    dest_pp_sheet['A135'] = net_obj['USA']['tCPM'] if net_obj.has_key('USA') else ''
-    dest_pp_sheet['B135'] = net_obj['USA']['target_reach'] if net_obj.has_key('USA') else ''
-    dest_pp_sheet['C135'] = net_obj['USA']['target_frequency'] if net_obj.has_key('USA') else ''
-    dest_pp_sheet['A136'] = net_obj['MSNBC']['tCPM'] if net_obj.has_key('MSNBC') else ''
-    dest_pp_sheet['B136'] = net_obj['MSNBC']['target_reach'] if net_obj.has_key('MSNBC') else ''
-    dest_pp_sheet['C136'] = net_obj['MSNBC']['target_frequency'] if net_obj.has_key('MSNBC') else ''
-    dest_pp_sheet['A137'] = net_obj['Sprout']['tCPM'] if net_obj.has_key('Sprout') else ''
-    dest_pp_sheet['B137'] = net_obj['Sprout']['target_reach'] if net_obj.has_key('Sprout') else ''
-    dest_pp_sheet['C137'] = net_obj['Sprout']['target_frequency'] if net_obj.has_key('Sprout') else ''
-    dest_pp_sheet['A138'] = net_obj['Telemundo']['tCPM'] if net_obj.has_key('Telemundo') else ''
-    dest_pp_sheet['B138'] = net_obj['Telemundo']['target_reach'] if net_obj.has_key('Telemundo') else ''
-    dest_pp_sheet['C138'] = net_obj['Telemundo']['target_frequency'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['A132'] = net_obj['MSNBC']['tCPM'] if net_obj.has_key('MSNBC') else ''
+    dest_pp_sheet['B132'] = net_obj['MSNBC']['target_reach'] if net_obj.has_key('MSNBC') else ''
+    dest_pp_sheet['C132'] = net_obj['MSNBC']['target_frequency'] if net_obj.has_key('MSNBC') else ''
+    dest_pp_sheet['A133'] = net_obj['NBCSN']['tCPM'] if net_obj.has_key('NBCSN') else ''
+    dest_pp_sheet['B133'] = net_obj['NBCSN']['target_reach'] if net_obj.has_key('NBCSN') else ''
+    dest_pp_sheet['C133'] = net_obj['NBCSN']['target_frequency'] if net_obj.has_key('NBCSN') else ''
+    dest_pp_sheet['A134'] = net_obj['Oxygen']['tCPM'] if net_obj.has_key('Oxygen') else ''
+    dest_pp_sheet['B134'] = net_obj['Oxygen']['target_reach'] if net_obj.has_key('Oxygen') else ''
+    dest_pp_sheet['C134'] = net_obj['Oxygen']['target_frequency'] if net_obj.has_key('Oxygen') else ''
+    dest_pp_sheet['A135'] = net_obj['Sprout']['tCPM'] if net_obj.has_key('Sprout') else ''
+    dest_pp_sheet['B135'] = net_obj['Sprout']['target_reach'] if net_obj.has_key('Sprout') else ''
+    dest_pp_sheet['C135'] = net_obj['Sprout']['target_frequency'] if net_obj.has_key('Sprout') else ''
+    dest_pp_sheet['A136'] = net_obj['Syfy']['tCPM'] if net_obj.has_key('Syfy') else ''
+    dest_pp_sheet['B136'] = net_obj['Syfy']['target_reach'] if net_obj.has_key('Syfy') else ''
+    dest_pp_sheet['C136'] = net_obj['Syfy']['target_frequency'] if net_obj.has_key('Syfy') else ''
+    dest_pp_sheet['A137'] = net_obj['Telemundo']['tCPM'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['B137'] = net_obj['Telemundo']['target_reach'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['C137'] = net_obj['Telemundo']['target_frequency'] if net_obj.has_key('Telemundo') else ''
+    dest_pp_sheet['A138'] = net_obj['USA']['tCPM'] if net_obj.has_key('USA') else ''
+    dest_pp_sheet['B138'] = net_obj['USA']['target_reach'] if net_obj.has_key('USA') else ''
+    dest_pp_sheet['C138'] = net_obj['USA']['target_frequency'] if net_obj.has_key('USA') else ''
     dest_pp_sheet['A139'] = day_net_obj['Morning']['NBC']['tCPM'] if day_net_obj['Morning'].has_key('NBC') else ''
     dest_pp_sheet['B139'] = day_net_obj['Morning']['NBC']['target_reach'] if day_net_obj['Morning'].has_key(
         'NBC') else ''
@@ -2235,7 +2261,7 @@ def move_when_done(processed, summary_equiv, summary_unequiv):
     return True
 
 
-listing = glob.glob('./preprocessed/*.xlsx')
+listing = glob.glob('./preprocessed/k*.xlsx')
 for filename in listing:
     filename = os.path.basename(filename)
     if os.path.isfile('./preprocessed/' + filename):
@@ -2251,16 +2277,16 @@ for filename in listing:
         print process_network_reach_tab(new_filename_unequiv, False)
         print process_powerpoint_tab(new_filename_unequiv, False)
         print process_appendix_tab(new_filename_unequiv, False)
-        print "processing equiv"
-        new_filename_equiv = setup(filename, True)
-        if not new_filename_equiv:
-            print "error setting up " + filename
-        print process_summary_tab(new_filename_equiv, True)
-        print process_Network_Daypart_tab(new_filename_equiv, True)
-        print process_frequency_distribution_tab(new_filename_equiv, True)
-        print process_reach_by_week_tab(new_filename_equiv, True)
-        print process_frequency_distribution_by_net_tab(new_filename_equiv, True)
-        print process_network_reach_tab(new_filename_equiv, True)
-        print process_powerpoint_tab(new_filename_equiv, True)
-        print process_appendix_tab(new_filename_equiv, True)
-        print move_when_done(filename, new_filename_equiv, new_filename_unequiv)
+        # print "processing equiv"
+        # new_filename_equiv = setup(filename, True)
+        # if not new_filename_equiv:
+        #     print "error setting up " + filename
+        # print process_summary_tab(new_filename_equiv, True)
+        # print process_Network_Daypart_tab(new_filename_equiv, True)
+        # print process_frequency_distribution_tab(new_filename_equiv, True)
+        # print process_reach_by_week_tab(new_filename_equiv, True)
+        # print process_frequency_distribution_by_net_tab(new_filename_equiv, True)
+        # print process_network_reach_tab(new_filename_equiv, True)
+        # print process_powerpoint_tab(new_filename_equiv, True)
+        # print process_appendix_tab(new_filename_equiv, True)
+        # print move_when_done(filename, new_filename_equiv, new_filename_unequiv)
