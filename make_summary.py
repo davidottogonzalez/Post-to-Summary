@@ -11,6 +11,8 @@ def format_cell(cell, header):
         cell.number_format = '##0.00%'
     elif 'dollars' in header:
         cell.number_format = '$#,##0.00'
+    elif 'time' in header or 'date' in header:
+        cell.number_format = 'MM-DD-YYYY HH:MM:SS'
     else:
         cell.number_format = '#,##0.00'
 
@@ -652,10 +654,10 @@ def process_reach_by_week_tab(filename, equiv):
 
                 if equiv and col_num in equiv_calc_list:
                     if col_num == 8:
-                        dest_reach_by_week_sheet.cell(row=dest_row, column=write_column).value = source_reach_by_week_sheet.cell(row=row_num, column=6).value / source_reach_by_week_sheet.cell(row=dest_row, column=4).value
+                        dest_reach_by_week_sheet.cell(row=dest_row, column=write_column).value = source_reach_by_week_sheet.cell(row=row_num, column=6).value / source_reach_by_week_sheet.cell(row=row_num, column=4).value
                         format_cell(dest_reach_by_week_sheet.cell(row=dest_row, column=write_column),source_reach_by_week_sheet.cell(row=1, column=col_num).value)
                     if col_num == 13:
-                        dest_reach_by_week_sheet.cell(row=dest_row, column=write_column).value = source_reach_by_week_sheet.cell(row=dest_row,column=11).value / source_reach_by_week_sheet.cell(row=dest_row, column=9).value
+                        dest_reach_by_week_sheet.cell(row=dest_row, column=write_column).value = source_reach_by_week_sheet.cell(row=row_num,column=11).value / source_reach_by_week_sheet.cell(row=row_num, column=9).value
                         format_cell(dest_reach_by_week_sheet.cell(row=dest_row, column=write_column),source_reach_by_week_sheet.cell(row=1, column=col_num).value)
                     write_column += 1
                     continue
@@ -925,11 +927,11 @@ def process_network_reach_tab(filename, equiv):
         dest_reach_net_sheet.cell(row=write_row, column=6).value = row_list['Bravo']['target_pct'] if row_list.has_key(
             'Bravo') else ''
         format_cell(dest_reach_net_sheet.cell(row=write_row, column=6), 'pct')
-        dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['CNBC']['target_pct'] if row_list.has_key(
-            'CNBC') else ''
+        dest_reach_net_sheet.cell(row=write_row, column=7).value = row_list['Chiller']['target_pct'] if row_list.has_key(
+            'Chiller') else ''
         format_cell(dest_reach_net_sheet.cell(row=write_row, column=7), 'pct')
-        dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['Chiller'][
-            'target_pct'] if row_list.has_key('Chiller') else ''
+        dest_reach_net_sheet.cell(row=write_row, column=8).value = row_list['CNBC'][
+            'target_pct'] if row_list.has_key('CNBC') else ''
         format_cell(dest_reach_net_sheet.cell(row=write_row, column=8), 'pct')
         dest_reach_net_sheet.cell(row=write_row, column=9).value = row_list['E!']['target_pct'] if row_list.has_key(
             'E!') else ''
@@ -963,7 +965,7 @@ def process_network_reach_tab(filename, equiv):
         format_cell(dest_reach_net_sheet.cell(row=write_row, column=18), 'pct')
         write_row += 1
 
-    networks = ['Bravo','CNBC','Chiller','E!','Esquire','Golf Channel','MSNBC','NBC','NBCSN','Oxygen','Sprout','Syfy','Telemundo','USA']
+    networks = ['Bravo','Chiller','CNBC','E!','Esquire','Golf Channel','MSNBC','NBC','NBCSN','Oxygen','Sprout','Syfy','Telemundo','USA']
     
     for network in networks:
         if row_list.has_key(network):
@@ -1060,7 +1062,7 @@ def process_powerpoint_tab(filename, equiv):
 
     for row_num in range(1, source_rows):
         if source_sheet.cell(row=row_num, column=1).value == 'Total':
-            dest_pp_sheet.cell(row=4, column=dest_column).value = source_sheet.cell(row=row_num, column=dest_column).value
+            dest_pp_sheet.cell(row=4, column=dest_column).value = source_sheet.cell(row=row_num, column=3).value
             format_cell(dest_pp_sheet.cell(row=4, column=dest_column), 'dollars')
             dest_pp_sheet.cell(row=5, column=dest_column).value = source_sheet.cell(row=row_num, column=2).value
             dest_pp_sheet.cell(row=8, column=dest_column).value = source_sheet.cell(row=row_num, column=14).value
@@ -1074,7 +1076,7 @@ def process_powerpoint_tab(filename, equiv):
             dest_pp_sheet.cell(row=12, column=dest_column).value = source_sheet.cell(row=row_num, column=24).value
             format_cell(dest_pp_sheet.cell(row=12, column=dest_column), '')
             dest_pp_sheet.cell(row=13, column=dest_column).value = source_sheet.cell(row=row_num, column=22).value
-            format_cell(dest_pp_sheet.cell(row=13, column=dest_column), 'pct')
+            format_cell(dest_pp_sheet.cell(row=13, column=dest_column), '')
             dest_pp_sheet.cell(row=14, column=dest_column).value = source_sheet.cell(row=row_num, column=15).value
             format_cell(dest_pp_sheet.cell(row=14, column=dest_column), '')
             dest_pp_sheet.cell(row=45, column=dest_column).value = source_sheet.cell(row=row_num, column=24).value
@@ -1105,13 +1107,13 @@ def process_powerpoint_tab(filename, equiv):
                 row=8, column=dest_column).value
             dest_pp_sheet.cell(row=46, column=dest_column).value = source_sheet.cell(row=row_num, column=24).value
             dest_pp_sheet.cell(row=73, column=dest_column).value = source_sheet.cell(row=row_num, column=16).value
-        if source_sheet.cell(row=row_num, column=1).value == 'CNBC':
+        if source_sheet.cell(row=row_num, column=1).value == 'Chiller':
             dest_pp_sheet.cell(row=19, column=dest_column).value = source_sheet.cell(row=row_num,
                                                                            column=14).value / dest_pp_sheet.cell(
                 row=8, column=dest_column).value
             dest_pp_sheet.cell(row=47, column=dest_column).value = source_sheet.cell(row=row_num, column=24).value
             dest_pp_sheet.cell(row=74, column=dest_column).value = source_sheet.cell(row=row_num, column=16).value
-        if source_sheet.cell(row=row_num, column=1).value == 'Chiller':
+        if source_sheet.cell(row=row_num, column=1).value == 'CNBC':
             dest_pp_sheet.cell(row=20, column=dest_column).value = source_sheet.cell(row=row_num,
                                                                            column=14).value / dest_pp_sheet.cell(
                 row=8, column=dest_column).value
@@ -1311,23 +1313,23 @@ def process_appendix_tab(filename, equiv):
             mo_im_total += day_net_obj['Morning']['Bravo']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             mo_re_total += day_net_obj['Morning']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Morning'].has_key('CNBC'):
-            dest_pp_sheet['C5'] = day_net_obj['Morning']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C28'] = day_net_obj['Morning']['CNBC']['target_index']
-            dest_pp_sheet['C52'] = day_net_obj['Morning']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C76'] = day_net_obj['Morning']['CNBC']['target_frequency']
-            mo_im_total += day_net_obj['Morning']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-            mo_re_total += day_net_obj['Morning']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Morning'].has_key('Chiller'):
-            dest_pp_sheet['D5'] = day_net_obj['Morning']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C5'] = day_net_obj['Morning']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D28'] = day_net_obj['Morning']['Chiller']['target_index']
-            dest_pp_sheet['D52'] = day_net_obj['Morning']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D76'] = day_net_obj['Morning']['Chiller']['target_frequency']
-            mo_im_total += day_net_obj['Morning']['Chiller']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
+            dest_pp_sheet['C28'] = day_net_obj['Morning']['Chiller']['target_index']
+            dest_pp_sheet['C52'] = day_net_obj['Morning']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C76'] = day_net_obj['Morning']['Chiller']['target_frequency']
+            mo_im_total += day_net_obj['Morning']['Chiller']['target_impressions'] / net_obj['Total']['target_impressions']
             mo_re_total += day_net_obj['Morning']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Morning'].has_key('CNBC'):
+            dest_pp_sheet['D5'] = day_net_obj['Morning']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D28'] = day_net_obj['Morning']['CNBC']['target_index']
+            dest_pp_sheet['D52'] = day_net_obj['Morning']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D76'] = day_net_obj['Morning']['CNBC']['target_frequency']
+            mo_im_total += day_net_obj['Morning']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            mo_re_total += day_net_obj['Morning']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Morning'].has_key('E!'):
             dest_pp_sheet['E5'] = day_net_obj['Morning']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -1437,23 +1439,23 @@ def process_appendix_tab(filename, equiv):
             dy_im_total += day_net_obj['Daytime']['Bravo']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             dy_re_total += day_net_obj['Daytime']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Daytime'].has_key('CNBC'):
-            dest_pp_sheet['C6'] = day_net_obj['Daytime']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C29'] = day_net_obj['Daytime']['CNBC']['target_index']
-            dest_pp_sheet['C53'] = day_net_obj['Daytime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C77'] = day_net_obj['Daytime']['CNBC']['target_frequency']
-            dy_im_total += day_net_obj['Daytime']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-            dy_re_total += day_net_obj['Daytime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Daytime'].has_key('Chiller'):
-            dest_pp_sheet['D6'] = day_net_obj['Daytime']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C6'] = day_net_obj['Daytime']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D29'] = day_net_obj['Daytime']['Chiller']['target_index']
-            dest_pp_sheet['D53'] = day_net_obj['Daytime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D77'] = day_net_obj['Daytime']['Chiller']['target_frequency']
-            dy_im_total += day_net_obj['Daytime']['Chiller']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
+            dest_pp_sheet['C29'] = day_net_obj['Daytime']['Chiller']['target_index']
+            dest_pp_sheet['C53'] = day_net_obj['Daytime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C77'] = day_net_obj['Daytime']['Chiller']['target_frequency']
+            dy_im_total += day_net_obj['Daytime']['Chiller']['target_impressions'] / net_obj['Total']['target_impressions']
             dy_re_total += day_net_obj['Daytime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Daytime'].has_key('CNBC'):
+            dest_pp_sheet['D6'] = day_net_obj['Daytime']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D29'] = day_net_obj['Daytime']['CNBC']['target_index']
+            dest_pp_sheet['D53'] = day_net_obj['Daytime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D77'] = day_net_obj['Daytime']['CNBC']['target_frequency']
+            dy_im_total += day_net_obj['Daytime']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dy_re_total += day_net_obj['Daytime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Daytime'].has_key('E!'):
             dest_pp_sheet['E6'] = day_net_obj['Daytime']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -1565,26 +1567,26 @@ def process_appendix_tab(filename, equiv):
             fe_im_total += day_net_obj['Early Fringe']['Bravo']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             fe_re_total += day_net_obj['Early Fringe']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Early Fringe'].has_key('CNBC'):
-            dest_pp_sheet['C7'] = day_net_obj['Early Fringe']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C30'] = day_net_obj['Early Fringe']['CNBC']['target_index']
-            dest_pp_sheet['C54'] = day_net_obj['Early Fringe']['CNBC']['target_reach'] / net_obj['Total'][
-                'target_reach']
-            dest_pp_sheet['C78'] = day_net_obj['Early Fringe']['CNBC']['target_frequency']
-            fe_im_total += day_net_obj['Early Fringe']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            fe_re_total += day_net_obj['Early Fringe']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Early Fringe'].has_key('Chiller'):
-            dest_pp_sheet['D7'] = day_net_obj['Early Fringe']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C7'] = day_net_obj['Early Fringe']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D30'] = day_net_obj['Early Fringe']['Chiller']['target_index']
-            dest_pp_sheet['D54'] = day_net_obj['Early Fringe']['Chiller']['target_reach'] / net_obj['Total'][
+            dest_pp_sheet['C30'] = day_net_obj['Early Fringe']['Chiller']['target_index']
+            dest_pp_sheet['C54'] = day_net_obj['Early Fringe']['Chiller']['target_reach'] / net_obj['Total'][
                 'target_reach']
-            dest_pp_sheet['D78'] = day_net_obj['Early Fringe']['Chiller']['target_frequency']
+            dest_pp_sheet['C78'] = day_net_obj['Early Fringe']['Chiller']['target_frequency']
             fe_im_total += day_net_obj['Early Fringe']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             fe_re_total += day_net_obj['Early Fringe']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Early Fringe'].has_key('CNBC'):
+            dest_pp_sheet['D7'] = day_net_obj['Early Fringe']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D30'] = day_net_obj['Early Fringe']['CNBC']['target_index']
+            dest_pp_sheet['D54'] = day_net_obj['Early Fringe']['CNBC']['target_reach'] / net_obj['Total'][
+                'target_reach']
+            dest_pp_sheet['D78'] = day_net_obj['Early Fringe']['CNBC']['target_frequency']
+            fe_im_total += day_net_obj['Early Fringe']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            fe_re_total += day_net_obj['Early Fringe']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Early Fringe'].has_key('E!'):
             dest_pp_sheet['E7'] = day_net_obj['Early Fringe']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -1705,23 +1707,23 @@ def process_appendix_tab(filename, equiv):
             dest_pp_sheet['B79'] = day_net_obj['Prime']['Bravo']['target_frequency']
             pr_im_total += day_net_obj['Prime']['Bravo']['target_impressions'] / net_obj['Total']['target_impressions']
             pr_re_total += day_net_obj['Prime']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Prime'].has_key('CNBC'):
-            dest_pp_sheet['C8'] = day_net_obj['Prime']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C31'] = day_net_obj['Prime']['CNBC']['target_index']
-            dest_pp_sheet['C55'] = day_net_obj['Prime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C79'] = day_net_obj['Prime']['CNBC']['target_frequency']
-            pr_im_total += day_net_obj['Prime']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-            pr_re_total += day_net_obj['Prime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Prime'].has_key('Chiller'):
-            dest_pp_sheet['D8'] = day_net_obj['Prime']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C8'] = day_net_obj['Prime']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D31'] = day_net_obj['Prime']['Chiller']['target_index']
-            dest_pp_sheet['D55'] = day_net_obj['Prime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D79'] = day_net_obj['Prime']['Chiller']['target_frequency']
-            pr_im_total += day_net_obj['Prime']['Chiller']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
+            dest_pp_sheet['C31'] = day_net_obj['Prime']['Chiller']['target_index']
+            dest_pp_sheet['C55'] = day_net_obj['Prime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C79'] = day_net_obj['Prime']['Chiller']['target_frequency']
+            pr_im_total += day_net_obj['Prime']['Chiller']['target_impressions'] / net_obj['Total']['target_impressions']
             pr_re_total += day_net_obj['Prime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Prime'].has_key('CNBC'):
+            dest_pp_sheet['D8'] = day_net_obj['Prime']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D31'] = day_net_obj['Prime']['CNBC']['target_index']
+            dest_pp_sheet['D55'] = day_net_obj['Prime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D79'] = day_net_obj['Prime']['CNBC']['target_frequency']
+            pr_im_total += day_net_obj['Prime']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            pr_re_total += day_net_obj['Prime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Prime'].has_key('E!'):
             dest_pp_sheet['E8'] = day_net_obj['Prime']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -1827,25 +1829,25 @@ def process_appendix_tab(filename, equiv):
             ln_im_total += day_net_obj['Late Night']['Bravo']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             ln_re_total += day_net_obj['Late Night']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Late Night'].has_key('CNBC'):
-            dest_pp_sheet['C9'] = day_net_obj['Late Night']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C32'] = day_net_obj['Late Night']['CNBC']['target_index']
-            dest_pp_sheet['C56'] = day_net_obj['Late Night']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C80'] = day_net_obj['Late Night']['CNBC']['target_frequency']
-            ln_im_total += day_net_obj['Late Night']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            ln_re_total += day_net_obj['Late Night']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Late Night'].has_key('Chiller'):
-            dest_pp_sheet['D9'] = day_net_obj['Late Night']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C9'] = day_net_obj['Late Night']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D32'] = day_net_obj['Late Night']['Chiller']['target_index']
-            dest_pp_sheet['D56'] = day_net_obj['Late Night']['Chiller']['target_reach'] / net_obj['Total'][
-                'target_reach']
-            dest_pp_sheet['D80'] = day_net_obj['Late Night']['Chiller']['target_frequency']
+            dest_pp_sheet['C32'] = day_net_obj['Late Night']['Chiller']['target_index']
+            dest_pp_sheet['C56'] = day_net_obj['Late Night']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C80'] = day_net_obj['Late Night']['Chiller']['target_frequency']
             ln_im_total += day_net_obj['Late Night']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             ln_re_total += day_net_obj['Late Night']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Late Night'].has_key('CNBC'):
+            dest_pp_sheet['D9'] = day_net_obj['Late Night']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D32'] = day_net_obj['Late Night']['CNBC']['target_index']
+            dest_pp_sheet['D56'] = day_net_obj['Late Night']['CNBC']['target_reach'] / net_obj['Total'][
+                'target_reach']
+            dest_pp_sheet['D80'] = day_net_obj['Late Night']['CNBC']['target_frequency']
+            ln_im_total += day_net_obj['Late Night']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            ln_re_total += day_net_obj['Late Night']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Late Night'].has_key('E!'):
             dest_pp_sheet['E9'] = day_net_obj['Late Night']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -1963,25 +1965,25 @@ def process_appendix_tab(filename, equiv):
             on_im_total += day_net_obj['Overnight']['Bravo']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             on_re_total += day_net_obj['Overnight']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('CNBC'):
-            dest_pp_sheet['C10'] = day_net_obj['Overnight']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C33'] = day_net_obj['Overnight']['CNBC']['target_index']
-            dest_pp_sheet['C57'] = day_net_obj['Overnight']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C81'] = day_net_obj['Overnight']['CNBC']['target_frequency']
-            on_im_total += day_net_obj['Overnight']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            on_re_total += day_net_obj['Overnight']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Chiller'):
-            dest_pp_sheet['D10'] = day_net_obj['Overnight']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C10'] = day_net_obj['Overnight']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D33'] = day_net_obj['Overnight']['Chiller']['target_index']
-            dest_pp_sheet['D57'] = day_net_obj['Overnight']['Chiller']['target_reach'] / net_obj['Total'][
-                'target_reach']
-            dest_pp_sheet['D81'] = day_net_obj['Overnight']['Chiller']['target_frequency']
+            dest_pp_sheet['C33'] = day_net_obj['Overnight']['Chiller']['target_index']
+            dest_pp_sheet['C57'] = day_net_obj['Overnight']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C81'] = day_net_obj['Overnight']['Chiller']['target_frequency']
             on_im_total += day_net_obj['Overnight']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             on_re_total += day_net_obj['Overnight']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('CNBC'):
+            dest_pp_sheet['D10'] = day_net_obj['Overnight']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D33'] = day_net_obj['Overnight']['CNBC']['target_index']
+            dest_pp_sheet['D57'] = day_net_obj['Overnight']['CNBC']['target_reach'] / net_obj['Total'][
+                'target_reach']
+            dest_pp_sheet['D81'] = day_net_obj['Overnight']['CNBC']['target_frequency']
+            on_im_total += day_net_obj['Overnight']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            on_re_total += day_net_obj['Overnight']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('E!'):
             dest_pp_sheet['E10'] = day_net_obj['Overnight']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -2130,10 +2132,10 @@ def process_appendix_tab(filename, equiv):
         # Totals
         dest_pp_sheet['B11'] = net_obj['Bravo']['target_impressions'] / net_obj['Total'][
             'target_impressions'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['C11'] = net_obj['CNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['D11'] = net_obj['Chiller']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['C11'] = net_obj['Chiller']['target_impressions'] / net_obj['Total'][
             'target_impressions'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['D11'] = net_obj['CNBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['E11'] = net_obj['E!']['target_impressions'] / net_obj['Total'][
             'target_impressions'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['F11'] = net_obj['Esquire']['target_impressions'] / net_obj['Total'][
@@ -2159,8 +2161,8 @@ def process_appendix_tab(filename, equiv):
         dest_pp_sheet['P11'] = net_obj['Total']['target_impressions'] / net_obj['Total']['target_impressions']
 
         dest_pp_sheet['B34'] = net_obj['Bravo']['target_index'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['C34'] = net_obj['CNBC']['target_index'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['D34'] = net_obj['Chiller']['target_index'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['C34'] = net_obj['Chiller']['target_index'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['D34'] = net_obj['CNBC']['target_index'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['E34'] = net_obj['E!']['target_index'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['F34'] = net_obj['Esquire']['target_index'] if net_obj.has_key('Esquire') else ''
         dest_pp_sheet['G34'] = net_obj['Golf Channel']['target_index'] if net_obj.has_key('Golf Channel') else ''
@@ -2176,10 +2178,10 @@ def process_appendix_tab(filename, equiv):
 
         dest_pp_sheet['B58'] = net_obj['Bravo']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
             'Bravo') else ''
-        dest_pp_sheet['C58'] = net_obj['CNBC']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
-            'CNBC') else ''
-        dest_pp_sheet['D58'] = net_obj['Chiller']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+        dest_pp_sheet['C58'] = net_obj['Chiller']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
             'Chiller') else ''
+        dest_pp_sheet['D58'] = net_obj['CNBC']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+            'CNBC') else ''
         dest_pp_sheet['E58'] = net_obj['E!']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
             'E!') else ''
         dest_pp_sheet['F58'] = net_obj['Esquire']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
@@ -2206,8 +2208,8 @@ def process_appendix_tab(filename, equiv):
         dest_pp_sheet['P58'] = net_obj['Total']['target_reach'] / net_obj['Total']['target_reach']
 
         dest_pp_sheet['B82'] = net_obj['Bravo']['target_frequency'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['C82'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['D82'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['C82'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['D82'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['E82'] = net_obj['E!']['target_frequency'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['F82'] = net_obj['Esquire']['target_frequency'] if net_obj.has_key('Esquire') else ''
         dest_pp_sheet['G82'] = net_obj['Golf Channel']['target_frequency'] if net_obj.has_key('Golf Channel') else ''
@@ -2222,8 +2224,8 @@ def process_appendix_tab(filename, equiv):
         dest_pp_sheet['O82'] = net_obj['Total']['target_frequency']
 
         dest_pp_sheet['B100'] = net_obj['Bravo']['target_frequency'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['B101'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['B102'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['B101'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['B102'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['B103'] = net_obj['E!']['target_frequency'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['B104'] = net_obj['Esquire']['target_frequency'] if net_obj.has_key('Esquire') else ''
         dest_pp_sheet['B105'] = net_obj['Golf Channel']['target_frequency'] if net_obj.has_key('Golf Channel') else ''
@@ -2264,22 +2266,22 @@ def process_appendix_tab(filename, equiv):
             dest_pp_sheet['B88'] = day_net_obj['Morning']['Bravo']['target_frequency']
             mo_im_total += day_net_obj['Morning']['Bravo']['target_impressions'] / net_obj['Total']['target_impressions']
             mo_re_total += day_net_obj['Morning']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Morning'].has_key('CNBC'):
-            dest_pp_sheet['C16'] = day_net_obj['Morning']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C39'] = day_net_obj['Morning']['CNBC']['target_index']
-            dest_pp_sheet['C63'] = day_net_obj['Morning']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C88'] = day_net_obj['Morning']['CNBC']['target_frequency']
-            mo_im_total += day_net_obj['Morning']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-            mo_re_total += day_net_obj['Morning']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Morning'].has_key('Chiller'):
-            dest_pp_sheet['D16'] = day_net_obj['Morning']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C16'] = day_net_obj['Morning']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D39'] = day_net_obj['Morning']['Chiller']['target_index']
-            dest_pp_sheet['D63'] = day_net_obj['Morning']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D88'] = day_net_obj['Morning']['Chiller']['target_frequency']
+            dest_pp_sheet['C39'] = day_net_obj['Morning']['Chiller']['target_index']
+            dest_pp_sheet['C63'] = day_net_obj['Morning']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C88'] = day_net_obj['Morning']['Chiller']['target_frequency']
             mo_im_total += day_net_obj['Morning']['Chiller']['target_impressions'] / net_obj['Total']['target_impressions']
             mo_re_total += day_net_obj['Morning']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Morning'].has_key('CNBC'):
+            dest_pp_sheet['D16'] = day_net_obj['Morning']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D39'] = day_net_obj['Morning']['CNBC']['target_index']
+            dest_pp_sheet['D63'] = day_net_obj['Morning']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D88'] = day_net_obj['Morning']['CNBC']['target_frequency']
+            mo_im_total += day_net_obj['Morning']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+            mo_re_total += day_net_obj['Morning']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Morning'].has_key('E!'):
             dest_pp_sheet['E16'] = day_net_obj['Morning']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -2380,22 +2382,22 @@ def process_appendix_tab(filename, equiv):
             dest_pp_sheet['B89'] = day_net_obj['Daytime']['Bravo']['target_frequency']
             dy_im_total += day_net_obj['Daytime']['Bravo']['target_impressions'] / net_obj['Total']['target_impressions']
             dy_re_total += day_net_obj['Daytime']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Daytime'].has_key('CNBC'):
-            dest_pp_sheet['C17'] = day_net_obj['Daytime']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C40'] = day_net_obj['Daytime']['CNBC']['target_index']
-            dest_pp_sheet['C64'] = day_net_obj['Daytime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C89'] = day_net_obj['Daytime']['CNBC']['target_frequency']
-            dy_im_total += day_net_obj['Daytime']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-            dy_re_total += day_net_obj['Daytime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Daytime'].has_key('Chiller'):
-            dest_pp_sheet['D17'] = day_net_obj['Daytime']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C17'] = day_net_obj['Daytime']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D40'] = day_net_obj['Daytime']['Chiller']['target_index']
-            dest_pp_sheet['D64'] = day_net_obj['Daytime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D89'] = day_net_obj['Daytime']['Chiller']['target_frequency']
+            dest_pp_sheet['C40'] = day_net_obj['Daytime']['Chiller']['target_index']
+            dest_pp_sheet['C64'] = day_net_obj['Daytime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C89'] = day_net_obj['Daytime']['Chiller']['target_frequency']
             dy_im_total += day_net_obj['Daytime']['Chiller']['target_impressions'] / net_obj['Total']['target_impressions']
             dy_re_total += day_net_obj['Daytime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Daytime'].has_key('CNBC'):
+            dest_pp_sheet['D17'] = day_net_obj['Daytime']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D40'] = day_net_obj['Daytime']['CNBC']['target_index']
+            dest_pp_sheet['D64'] = day_net_obj['Daytime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D89'] = day_net_obj['Daytime']['CNBC']['target_frequency']
+            dy_im_total += day_net_obj['Daytime']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+            dy_re_total += day_net_obj['Daytime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Daytime'].has_key('E!'):
             dest_pp_sheet['E17'] = day_net_obj['Daytime']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -2498,24 +2500,24 @@ def process_appendix_tab(filename, equiv):
             fe_im_total += day_net_obj['Early Fringe']['Bravo']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             fe_re_total += day_net_obj['Early Fringe']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Early Fringe'].has_key('CNBC'):
-            dest_pp_sheet['C18'] = day_net_obj['Early Fringe']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C41'] = day_net_obj['Early Fringe']['CNBC']['target_index']
-            dest_pp_sheet['C65'] = day_net_obj['Early Fringe']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C90'] = day_net_obj['Early Fringe']['CNBC']['target_frequency']
-            fe_im_total += day_net_obj['Early Fringe']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            fe_re_total += day_net_obj['Early Fringe']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Early Fringe'].has_key('Chiller'):
-            dest_pp_sheet['D18'] = day_net_obj['Early Fringe']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C18'] = day_net_obj['Early Fringe']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D41'] = day_net_obj['Early Fringe']['Chiller']['target_index']
-            dest_pp_sheet['D65'] = day_net_obj['Early Fringe']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D90'] = day_net_obj['Early Fringe']['Chiller']['target_frequency']
+            dest_pp_sheet['C41'] = day_net_obj['Early Fringe']['Chiller']['target_index']
+            dest_pp_sheet['C65'] = day_net_obj['Early Fringe']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C90'] = day_net_obj['Early Fringe']['Chiller']['target_frequency']
             fe_im_total += day_net_obj['Early Fringe']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
             fe_re_total += day_net_obj['Early Fringe']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Early Fringe'].has_key('CNBC'):
+            dest_pp_sheet['D18'] = day_net_obj['Early Fringe']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D41'] = day_net_obj['Early Fringe']['CNBC']['target_index']
+            dest_pp_sheet['D65'] = day_net_obj['Early Fringe']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D90'] = day_net_obj['Early Fringe']['CNBC']['target_frequency']
+            fe_im_total += day_net_obj['Early Fringe']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            fe_re_total += day_net_obj['Early Fringe']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Early Fringe'].has_key('E!'):
             dest_pp_sheet['E18'] = day_net_obj['Early Fringe']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -2625,22 +2627,22 @@ def process_appendix_tab(filename, equiv):
             dest_pp_sheet['B91'] = day_net_obj['Prime']['Bravo']['target_frequency']
             pr_im_total += day_net_obj['Prime']['Bravo']['target_impressions'] / net_obj['Total']['target_impressions']
             pr_re_total += day_net_obj['Prime']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Prime'].has_key('CNBC'):
-            dest_pp_sheet['C19'] = day_net_obj['Prime']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C42'] = day_net_obj['Prime']['CNBC']['target_index']
-            dest_pp_sheet['C66'] = day_net_obj['Prime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C91'] = day_net_obj['Prime']['CNBC']['target_frequency']
-            pr_im_total += day_net_obj['Prime']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-            pr_re_total += day_net_obj['Prime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Prime'].has_key('Chiller'):
-            dest_pp_sheet['D19'] = day_net_obj['Prime']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C19'] = day_net_obj['Prime']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D42'] = day_net_obj['Prime']['Chiller']['target_index']
-            dest_pp_sheet['D66'] = day_net_obj['Prime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D91'] = day_net_obj['Prime']['Chiller']['target_frequency']
+            dest_pp_sheet['C42'] = day_net_obj['Prime']['Chiller']['target_index']
+            dest_pp_sheet['C66'] = day_net_obj['Prime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C91'] = day_net_obj['Prime']['Chiller']['target_frequency']
             pr_im_total += day_net_obj['Prime']['Chiller']['target_impressions'] / net_obj['Total']['target_impressions']
             pr_re_total += day_net_obj['Prime']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Prime'].has_key('CNBC'):
+            dest_pp_sheet['D19'] = day_net_obj['Prime']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D42'] = day_net_obj['Prime']['CNBC']['target_index']
+            dest_pp_sheet['D66'] = day_net_obj['Prime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D91'] = day_net_obj['Prime']['CNBC']['target_frequency']
+            pr_im_total += day_net_obj['Prime']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
+            pr_re_total += day_net_obj['Prime']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Prime'].has_key('E!'):
             dest_pp_sheet['E19'] = day_net_obj['Prime']['E!']['target_impressions'] / net_obj['Total']['target_impressions']
             dest_pp_sheet['E42'] = day_net_obj['Prime']['E!']['target_index']
@@ -2741,23 +2743,23 @@ def process_appendix_tab(filename, equiv):
             dest_pp_sheet['B92'] = day_net_obj['Late Night']['Bravo']['target_frequency']
             ln_im_total += day_net_obj['Late Night']['Bravo']['target_impressions'] / net_obj['Total']['target_impressions']
             ln_re_total += day_net_obj['Late Night']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj['Late Night'].has_key('CNBC'):
-            dest_pp_sheet['C20'] = day_net_obj['Late Night']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C43'] = day_net_obj['Late Night']['CNBC']['target_index']
-            dest_pp_sheet['C67'] = day_net_obj['Late Night']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C92'] = day_net_obj['Late Night']['CNBC']['target_frequency']
-            ln_im_total += day_net_obj['Late Night']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-            ln_re_total += day_net_obj['Late Night']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Late Night'].has_key('Chiller'):
-            dest_pp_sheet['D20'] = day_net_obj['Late Night']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C20'] = day_net_obj['Late Night']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D43'] = day_net_obj['Late Night']['Chiller']['target_index']
-            dest_pp_sheet['D67'] = day_net_obj['Late Night']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D92'] = day_net_obj['Late Night']['Chiller']['target_frequency']
-            ln_im_total += day_net_obj['Late Night']['Chiller']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
+            dest_pp_sheet['C43'] = day_net_obj['Late Night']['Chiller']['target_index']
+            dest_pp_sheet['C67'] = day_net_obj['Late Night']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C92'] = day_net_obj['Late Night']['Chiller']['target_frequency']
+            ln_im_total += day_net_obj['Late Night']['Chiller']['target_impressions'] / net_obj['Total']['target_impressions']
             ln_re_total += day_net_obj['Late Night']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj['Late Night'].has_key('CNBC'):
+            dest_pp_sheet['D20'] = day_net_obj['Late Night']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D43'] = day_net_obj['Late Night']['CNBC']['target_index']
+            dest_pp_sheet['D67'] = day_net_obj['Late Night']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D92'] = day_net_obj['Late Night']['CNBC']['target_frequency']
+            ln_im_total += day_net_obj['Late Night']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            ln_re_total += day_net_obj['Late Night']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj['Late Night'].has_key('E!'):
             dest_pp_sheet['E20'] = day_net_obj['Late Night']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -2862,23 +2864,23 @@ def process_appendix_tab(filename, equiv):
             dest_pp_sheet['B93'] = day_net_obj['Overnight']['Bravo']['target_frequency']
             on_im_total += day_net_obj['Overnight']['Bravo']['target_impressions'] / net_obj['Total']['target_impressions']
             on_re_total += day_net_obj['Overnight']['Bravo']['target_reach'] / net_obj['Total']['target_reach']
-        if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('CNBC'):
-            dest_pp_sheet['C21'] = day_net_obj['Overnight']['CNBC']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
-            dest_pp_sheet['C44'] = day_net_obj['Overnight']['CNBC']['target_index']
-            dest_pp_sheet['C68'] = day_net_obj['Overnight']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['C93'] = day_net_obj['Overnight']['CNBC']['target_frequency']
-            on_im_total += day_net_obj['Overnight']['CNBC']['target_impressions'] / net_obj['Total']['target_impressions']
-            on_re_total += day_net_obj['Overnight']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Chiller'):
-            dest_pp_sheet['D21'] = day_net_obj['Overnight']['Chiller']['target_impressions'] / net_obj['Total'][
+            dest_pp_sheet['C21'] = day_net_obj['Overnight']['Chiller']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
-            dest_pp_sheet['D44'] = day_net_obj['Overnight']['Chiller']['target_index']
-            dest_pp_sheet['D68'] = day_net_obj['Overnight']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
-            dest_pp_sheet['D93'] = day_net_obj['Overnight']['Chiller']['target_frequency']
-            on_im_total += day_net_obj['Overnight']['Chiller']['target_impressions'] / net_obj['Total'][
-                'target_impressions']
+            dest_pp_sheet['C44'] = day_net_obj['Overnight']['Chiller']['target_index']
+            dest_pp_sheet['C68'] = day_net_obj['Overnight']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['C93'] = day_net_obj['Overnight']['Chiller']['target_frequency']
+            on_im_total += day_net_obj['Overnight']['Chiller']['target_impressions'] / net_obj['Total']['target_impressions']
             on_re_total += day_net_obj['Overnight']['Chiller']['target_reach'] / net_obj['Total']['target_reach']
+        if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('CNBC'):
+            dest_pp_sheet['D21'] = day_net_obj['Overnight']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            dest_pp_sheet['D44'] = day_net_obj['Overnight']['CNBC']['target_index']
+            dest_pp_sheet['D68'] = day_net_obj['Overnight']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
+            dest_pp_sheet['D93'] = day_net_obj['Overnight']['CNBC']['target_frequency']
+            on_im_total += day_net_obj['Overnight']['CNBC']['target_impressions'] / net_obj['Total'][
+                'target_impressions']
+            on_re_total += day_net_obj['Overnight']['CNBC']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('E!'):
             dest_pp_sheet['E21'] = day_net_obj['Overnight']['E!']['target_impressions'] / net_obj['Total'][
                 'target_impressions']
@@ -3014,10 +3016,10 @@ def process_appendix_tab(filename, equiv):
         # Totals
         dest_pp_sheet['B22'] = net_obj['Bravo']['target_impressions'] / net_obj['Total'][
             'target_impressions'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['C22'] = net_obj['CNBC']['target_impressions'] / net_obj['Total'][
-            'target_impressions'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['D22'] = net_obj['Chiller']['target_impressions'] / net_obj['Total'][
+        dest_pp_sheet['C22'] = net_obj['Chiller']['target_impressions'] / net_obj['Total'][
             'target_impressions'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['D22'] = net_obj['CNBC']['target_impressions'] / net_obj['Total'][
+            'target_impressions'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['E22'] = net_obj['E!']['target_impressions'] / net_obj['Total'][
             'target_impressions'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['F22'] = net_obj['Esquire']['target_impressions'] / net_obj['Total'][
@@ -3043,8 +3045,8 @@ def process_appendix_tab(filename, equiv):
         dest_pp_sheet['P22'] = net_obj['Total']['target_impressions'] / net_obj['Total']['target_impressions']
 
         dest_pp_sheet['B45'] = net_obj['Bravo']['target_index'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['C45'] = net_obj['CNBC']['target_index'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['D45'] = net_obj['Chiller']['target_index'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['C45'] = net_obj['Chiller']['target_index'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['D45'] = net_obj['CNBC']['target_index'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['E45'] = net_obj['E!']['target_index'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['F45'] = net_obj['Esquire']['target_index'] if net_obj.has_key('Esquire') else ''
         dest_pp_sheet['G45'] = net_obj['Golf Channel']['target_index'] if net_obj.has_key('Golf Channel') else ''
@@ -3060,10 +3062,10 @@ def process_appendix_tab(filename, equiv):
 
         dest_pp_sheet['B69'] = net_obj['Bravo']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
             'Bravo') else ''
-        dest_pp_sheet['C69'] = net_obj['CNBC']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
-            'CNBC') else ''
-        dest_pp_sheet['D69'] = net_obj['Chiller']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+        dest_pp_sheet['C69'] = net_obj['Chiller']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
             'Chiller') else ''
+        dest_pp_sheet['D69'] = net_obj['CNBC']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
+            'CNBC') else ''
         dest_pp_sheet['E69'] = net_obj['E!']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
             'E!') else ''
         dest_pp_sheet['F69'] = net_obj['Esquire']['target_reach'] / net_obj['Total']['target_reach'] if net_obj.has_key(
@@ -3089,8 +3091,8 @@ def process_appendix_tab(filename, equiv):
         dest_pp_sheet['P69'] = net_obj['Total']['target_reach'] / net_obj['Total']['target_reach']
 
         dest_pp_sheet['B94'] = net_obj['Bravo']['target_frequency'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['C94'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['D94'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['C94'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['D94'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['E94'] = net_obj['E!']['target_frequency'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['F94'] = net_obj['Esquire']['target_frequency'] if net_obj.has_key('Esquire') else ''
         dest_pp_sheet['G94'] = net_obj['Golf Channel']['target_frequency'] if net_obj.has_key('Golf Channel') else ''
@@ -3105,8 +3107,8 @@ def process_appendix_tab(filename, equiv):
         dest_pp_sheet['O94'] = net_obj['Total']['target_frequency']
 
         dest_pp_sheet['C100'] = net_obj['Bravo']['target_frequency'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['C101'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['C102'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['C101'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['C102'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['C103'] = net_obj['E!']['target_frequency'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['C104'] = net_obj['Esquire']['target_frequency'] if net_obj.has_key('Esquire') else ''
         dest_pp_sheet['C105'] = net_obj['Golf Channel']['target_frequency'] if net_obj.has_key('Golf Channel') else ''
@@ -3137,12 +3139,12 @@ def process_appendix_tab(filename, equiv):
         dest_pp_sheet['A126'] = net_obj['Bravo']['tCPM'] if net_obj.has_key('Bravo') else ''
         dest_pp_sheet['B126'] = net_obj['Bravo']['target_reach'] if net_obj.has_key('Bravo') else ''
         dest_pp_sheet['C126'] = net_obj['Bravo']['target_frequency'] if net_obj.has_key('Bravo') else ''
-        dest_pp_sheet['A127'] = net_obj['CNBC']['tCPM'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['B127'] = net_obj['CNBC']['target_reach'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['C127'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
-        dest_pp_sheet['A128'] = net_obj['Chiller']['tCPM'] if net_obj.has_key('Chiller') else ''
-        dest_pp_sheet['B128'] = net_obj['Chiller']['target_reach'] if net_obj.has_key('Chiller') else ''
-        dest_pp_sheet['C128'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['A127'] = net_obj['Chiller']['tCPM'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['B127'] = net_obj['Chiller']['target_reach'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['C127'] = net_obj['Chiller']['target_frequency'] if net_obj.has_key('Chiller') else ''
+        dest_pp_sheet['A128'] = net_obj['CNBC']['tCPM'] if net_obj.has_key('CNBC') else ''
+        dest_pp_sheet['B128'] = net_obj['CNBC']['target_reach'] if net_obj.has_key('CNBC') else ''
+        dest_pp_sheet['C128'] = net_obj['CNBC']['target_frequency'] if net_obj.has_key('CNBC') else ''
         dest_pp_sheet['A129'] = net_obj['E!']['tCPM'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['B129'] = net_obj['E!']['target_reach'] if net_obj.has_key('E!') else ''
         dest_pp_sheet['C129'] = net_obj['E!']['target_frequency'] if net_obj.has_key('E!') else ''
