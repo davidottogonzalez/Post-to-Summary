@@ -1055,7 +1055,7 @@ def process_powerpoint_tab(filename, equiv):
 
     dest_pp_sheet['A2'] = 'EQUIVALIZED - Total Campaign Target Metrics' if equiv else 'UNEQUIVALIZED - Total Campaign Target Metrics'
 
-    if 'normalized' in filename:
+    if 'normalized' in filename or 'full' in filename:
         dest_column = 2
     else:
         dest_column = 3
@@ -1300,7 +1300,7 @@ def process_appendix_tab(filename, equiv):
                 'target_reach': source_sheet.cell(row=row_num, column=19).value,
                 'target_frequency': source_sheet.cell(row=row_num, column=26).value,
                 'tCPM': source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num, column=18).value}
-    if 'normalized' in filename:
+    if 'normalized' in filename or 'full' in filename:
         # Morning
         mo_im_total = 0
         mo_re_total = 0
@@ -3248,9 +3248,16 @@ def copy_unopt_and_opt(files_list):
     for sum_file in files_list:
         if 'normalized' in sum_file:
             unopt_file = sum_file
+        elif 'full' in sum_file:
+            unopt_full_file = sum_file
         else:
             opt_file = sum_file
 
+    copy_unopt_and_opt_helper(unopt_file, opt_file, True)
+    copy_unopt_and_opt_helper(unopt_full_file, opt_file, False)
+
+
+def copy_unopt_and_opt_helper(unopt_file, opt_file, is_normalized):
     unopt_wb = load_workbook(unopt_file)
     opt_wb = load_workbook(opt_file)
 
@@ -3258,8 +3265,9 @@ def copy_unopt_and_opt(files_list):
     opt_sheet = opt_wb.get_sheet_by_name('Powerpoint Data')
 
     # Copy unopt Powerpoint sheet to opt
-    for row_num in range(1, unopt_sheet.max_row + 1):
-        opt_sheet['B' + str(row_num)] = unopt_sheet['B' + str(row_num)].value
+    if is_normalized:
+        for row_num in range(1, unopt_sheet.max_row + 1):
+            opt_sheet['B' + str(row_num)] = unopt_sheet['B' + str(row_num)].value
 
     # Copy opt Powerpoint sheet to uopt
     for row_num in range(1, opt_sheet.max_row + 1):
@@ -3269,24 +3277,25 @@ def copy_unopt_and_opt(files_list):
     opt_sheet = opt_wb.get_sheet_by_name('Appendix')
 
     # Copy unopt Appendix sheet to opt
-    for row_num in range(5, 12):
-        for col_num in range(1,unopt_sheet.max_column + 1):
-            opt_sheet.cell(row=row_num, column=col_num).value = unopt_sheet.cell(row=row_num, column=col_num).value
+    if is_normalized:
+        for row_num in range(5, 12):
+            for col_num in range(1,unopt_sheet.max_column + 1):
+                opt_sheet.cell(row=row_num, column=col_num).value = unopt_sheet.cell(row=row_num, column=col_num).value
 
-    for row_num in range(28, 36):
-        for col_num in range(1,unopt_sheet.max_column + 1):
-            opt_sheet.cell(row=row_num, column=col_num).value = unopt_sheet.cell(row=row_num, column=col_num).value
+        for row_num in range(28, 36):
+            for col_num in range(1,unopt_sheet.max_column + 1):
+                opt_sheet.cell(row=row_num, column=col_num).value = unopt_sheet.cell(row=row_num, column=col_num).value
 
-    for row_num in range(52, 60):
-        for col_num in range(1,unopt_sheet.max_column + 1):
-            opt_sheet.cell(row=row_num, column=col_num).value = unopt_sheet.cell(row=row_num,
-                                                                       column=col_num).value
-    for row_num in range(76, 84):
-        for col_num in range(1,unopt_sheet.max_column + 1):
-            opt_sheet.cell(row=row_num, column=col_num).value = unopt_sheet.cell(row=row_num,
-                                                                       column=col_num).value
-    for row_num in range(99, 124):
-        opt_sheet['B' + str(row_num)] = unopt_sheet['B' + str(row_num)].value
+        for row_num in range(52, 60):
+            for col_num in range(1,unopt_sheet.max_column + 1):
+                opt_sheet.cell(row=row_num, column=col_num).value = unopt_sheet.cell(row=row_num,
+                                                                           column=col_num).value
+        for row_num in range(76, 84):
+            for col_num in range(1,unopt_sheet.max_column + 1):
+                opt_sheet.cell(row=row_num, column=col_num).value = unopt_sheet.cell(row=row_num,
+                                                                           column=col_num).value
+        for row_num in range(99, 124):
+            opt_sheet['B' + str(row_num)] = unopt_sheet['B' + str(row_num)].value
 
     # Copy opt Appendix sheet to unopt
     for row_num in range(16, 24):
