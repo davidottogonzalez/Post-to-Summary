@@ -4,3 +4,4 @@ venv
 summaries/*.xlsx
 preprocessed/*.xlsx
 processed/*.xlsx
+temp

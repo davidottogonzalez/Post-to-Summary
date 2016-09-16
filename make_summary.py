@@ -232,7 +232,7 @@ def process_summary_tab(filename, equiv):
                             summary_sheet.cell(row=start_row, column=write_col).value = 'tCPM_unequiv'
                             program_metrics_sheet.cell(row=p_start_row, column=write_col).value = 'tCPM_unequiv'
                         else:
-                            if source_spot_sheet.cell(row=row_num, column=39).value != None:
+                            if source_spot_sheet.cell(row=row_num, column=39).value:
                                 summary_sheet.cell(row=start_row, column=write_col).value = \
                                     source_spot_sheet.cell(row=row_num,
                                                            column=26).value * 1000 / source_spot_sheet.cell(row=row_num,
@@ -583,7 +583,7 @@ def process_frequency_distribution_tab(filename, equiv):
     network_start = 0
     for row_num in range(4, dest_freq_sheet.max_row + 1):
         if incrementor % 5 == 0 or not dest_freq_sheet.cell(row=row_num + 1, column=1).value:
-            if dest_freq_sheet.cell(row=row_num, column=3).value:
+            if re.sub(r'[^0-9.]', '', str(dest_freq_sheet.cell(row=row_num, column=3).value)):
                 dest_freq_sheet.cell(row=row_num, column=4).value = sum_incrementor + dest_freq_sheet.cell(row=row_num,
                                                                                                            column=3).value
             else:
@@ -593,7 +593,7 @@ def process_frequency_distribution_tab(filename, equiv):
             incrementor = 1
             sum_incrementor = 0
         else:
-            if dest_freq_sheet.cell(row=row_num, column=3).value:
+            if re.sub(r'[^0-9.]', '', str(dest_freq_sheet.cell(row=row_num, column=3).value)):
                 sum_incrementor += dest_freq_sheet.cell(row=row_num, column=3).value
             incrementor += 1
         if not dest_freq_sheet.cell(row=row_num + 1, column=1).value:
@@ -632,7 +632,8 @@ def process_reach_by_week_tab(filename, equiv):
     global source_wb
     global summary_wb
 
-    source_reach_by_week_sheet = source_wb.get_sheet_by_name('Reach by Week')
+    source_reach_by_week_sheet = source_wb.get_sheet_by_name('Reach by Week') if "Reach by Week" in source_wb.sheetnames \
+        else source_wb.get_sheet_by_name('Reach By Week')
     dest_reach_by_week_sheet = summary_wb.get_sheet_by_name('Reach by Week')
     dest_row = 4
     write_column = 1
@@ -888,7 +889,8 @@ def process_network_reach_tab(filename, equiv):
     global source_wb
     global summary_wb
 
-    source_reach_net_sheet = source_wb.get_sheet_by_name('Reach by Week')
+    source_reach_net_sheet = source_wb.get_sheet_by_name('Reach by Week') if "Reach by Week" in source_wb.sheetnames \
+        else source_wb.get_sheet_by_name('Reach By Week')
     dest_reach_net_sheet = summary_wb.get_sheet_by_name('Network Reach by Week')
     source_rows = source_reach_net_sheet.max_row
     reach_net_obj = {}
