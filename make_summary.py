@@ -2150,7 +2150,7 @@ def process_appendix_tab(filename, equiv):
             on_re_total += day_net_obj['Overnight']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('USA'):
             dest_pp_sheet['P10'] = day_net_obj['Overnight']['USA']['target_impressions'] / net_obj['Total'][
-                'target_impOessions']
+                'target_impressions']
             dest_pp_sheet['P33'] = day_net_obj['Overnight']['USA']['target_index']
             dest_pp_sheet['P57'] = day_net_obj['Overnight']['USA']['target_reach'] / net_obj['Total']['target_reach']
             dest_pp_sheet['P81'] = day_net_obj['Overnight']['USA']['target_frequency']
