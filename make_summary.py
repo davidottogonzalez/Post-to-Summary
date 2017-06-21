@@ -88,7 +88,8 @@ def process_summary_tab(filename, equiv):
                         else:
                             summary_sheet.cell(row=start_row, column=write_col).value = \
                                 source_sheet.cell(row=row_num, column=5).value / source_sheet.cell(row=row_num,
-                                                                                                   column=7).value
+                                                                                                   column=7).value \
+                                    if source_sheet.cell(row=row_num, column=7).value else 0
 
                         format_cell(summary_sheet.cell(row=start_row, column=write_col),
                                     source_sheet.cell(row=1, column=col_num).value)
@@ -99,7 +100,8 @@ def process_summary_tab(filename, equiv):
                         else:
                             summary_sheet.cell(row=start_row, column=write_col).value = \
                                 source_sheet.cell(row=row_num, column=17).value / source_sheet.cell(row=row_num,
-                                                                                                    column=19).value
+                                                                                                    column=19).value \
+                                    if source_sheet.cell(row=row_num, column=19).value else 0
                         format_cell(summary_sheet.cell(row=start_row, column=write_col),
                                     source_sheet.cell(row=1, column=col_num).value)
                         write_col += 1
@@ -121,7 +123,8 @@ def process_summary_tab(filename, equiv):
                         else:
                             summary_sheet.cell(row=start_row, column=write_col).value = \
                                 source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num,
-                                                                                                          column=18).value
+                                                                                                          column=18).value \
+                                    if source_sheet.cell(row=row_num, column=18).value else 0
                             format_cell(summary_sheet.cell(row=start_row, column=write_col),
                                         source_sheet.cell(row=1, column=col_num).value)
                         write_col += 1
@@ -435,7 +438,7 @@ def process_Network_Daypart_tab(filename, equiv):
                                 source_network_day_sheet.cell(row=row_num,
                                                               column=6).value / source_network_day_sheet.cell(
                                     row=row_num,
-                                    column=8).value
+                                    column=8).value if source_network_day_sheet.cell(row=row_num, column=8).value else 0
 
                         format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
                                     source_network_day_sheet.cell(row=1, column=col_num).value)
@@ -448,8 +451,8 @@ def process_Network_Daypart_tab(filename, equiv):
                             dest_network_day_sheet.cell(row=write_row, column=write_col).value = \
                                 source_network_day_sheet.cell(row=row_num,
                                                               column=18).value / source_network_day_sheet.cell(
-                                    row=row_num,
-                                    column=20).value
+                                    row=row_num, column=20).value if source_network_day_sheet.cell(row=row_num, column=20).value else 0
+
                         format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
                                     source_network_day_sheet.cell(row=1, column=col_num).value)
                         write_col += 1
@@ -478,7 +481,7 @@ def process_Network_Daypart_tab(filename, equiv):
                                 source_network_day_sheet.cell(row=row_num,
                                                               column=5).value * 1000 / source_network_day_sheet.cell(
                                     row=row_num,
-                                    column=19).value
+                                    column=19).value if source_network_day_sheet.cell( row=row_num, column=19).value else 0
                             format_cell(dest_network_day_sheet.cell(row=write_row, column=write_col),
                                         source_network_day_sheet.cell(row=1, column=col_num).value)
                         write_col += 1
@@ -1070,7 +1073,7 @@ def process_powerpoint_tab(filename, equiv):
 
     dest_pp_sheet['A2'] = 'EQUIVALIZED - Total Campaign Target Metrics' if equiv else 'UNEQUIVALIZED - Total Campaign Target Metrics'
 
-    if 'normalized' in filename or 'full' in filename:
+    if 'normalized' in filename or 'full' in filename or 'NON-ATP' in filename:
         dest_column = 2
     else:
         dest_column = 3
@@ -1313,15 +1316,16 @@ def process_appendix_tab(filename, equiv):
                 'target_index': source_sheet.cell(row=row_num, column=29).value,
                 'target_reach': source_sheet.cell(row=row_num, column=19).value,
                 'target_frequency': source_sheet.cell(row=row_num, column=26).value,
-                'tCPM': source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num, column=17).value}
+                'tCPM': source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num, column=17).value if source_sheet.cell(row=row_num, column=17).value else 0}
         else:
             net_obj[source_sheet.cell(row=row_num, column=1).value] = {
                 'target_impressions': source_sheet.cell(row=row_num, column=18).value,
                 'target_index': source_sheet.cell(row=row_num, column=30).value,
                 'target_reach': source_sheet.cell(row=row_num, column=19).value,
                 'target_frequency': source_sheet.cell(row=row_num, column=26).value,
-                'tCPM': source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num, column=18).value}
-    if 'normalized' in filename or 'full' in filename:
+                'tCPM': source_sheet.cell(row=row_num, column=4).value * 1000 / source_sheet.cell(row=row_num, column=18).value
+                if source_sheet.cell(row=row_num, column=18).value else 0}
+    if 'normalized' in filename or 'full' in filename or 'NON-ATP' in filename:
         # Morning
         mo_im_total = 0
         mo_re_total = 0
@@ -2141,7 +2145,7 @@ def process_appendix_tab(filename, equiv):
             on_re_total += day_net_obj['Overnight']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Telemundo'):
             dest_pp_sheet['O10'] = day_net_obj['Overnight']['Telemundo']['target_impressions'] / net_obj['Total'][
-                'target_impOessions']
+                'target_impressions']
             dest_pp_sheet['O33'] = day_net_obj['Overnight']['Telemundo']['target_index']
             dest_pp_sheet['O57'] = day_net_obj['Overnight']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
             dest_pp_sheet['O81'] = day_net_obj['Overnight']['Telemundo']['target_frequency']
@@ -3086,7 +3090,7 @@ def process_appendix_tab(filename, equiv):
             on_re_total += day_net_obj['Overnight']['Syfy']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('Telemundo'):
             dest_pp_sheet['O21'] = day_net_obj['Overnight']['Telemundo']['target_impressions'] / net_obj['Total'][
-                'target_impOessions']
+                'target_impressions']
             dest_pp_sheet['O44'] = day_net_obj['Overnight']['Telemundo']['target_index']
             dest_pp_sheet['O68'] = day_net_obj['Overnight']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
             dest_pp_sheet['O93'] = day_net_obj['Overnight']['Telemundo']['target_frequency']
@@ -3094,7 +3098,7 @@ def process_appendix_tab(filename, equiv):
             on_re_total += day_net_obj['Overnight']['Telemundo']['target_reach'] / net_obj['Total']['target_reach']
         if day_net_obj.has_key('Overnight') and day_net_obj['Overnight'].has_key('USA'):
             dest_pp_sheet['P21'] = day_net_obj['Overnight']['USA']['target_impressions'] / net_obj['Total'][
-                'target_impOessions']
+                'target_impressions']
             dest_pp_sheet['P44'] = day_net_obj['Overnight']['USA']['target_index']
             dest_pp_sheet['P68'] = day_net_obj['Overnight']['USA']['target_reach'] / net_obj['Total']['target_reach']
             dest_pp_sheet['P93'] = day_net_obj['Overnight']['USA']['target_frequency']
@@ -3384,9 +3388,9 @@ def merge_opt_and_unopt():
 
 def copy_unopt_and_opt(files_list):
     for sum_file in files_list:
-        if 'normalized' in sum_file:
+        if 'normalized' in sum_file or 'NON-ATP' in sum_file:
             unopt_file = sum_file
-        elif 'full' in sum_file:
+        elif 'full' in sum_file or 'NON-ATP' in sum_file:
             unopt_full_file = sum_file
         else:
             opt_file = sum_file
